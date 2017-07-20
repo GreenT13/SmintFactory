@@ -38,26 +38,13 @@ public class BuilderPresenter implements Initializable {
 				// TODO Auto-generated method stub
 				buildButton1.setDisable(false);
 				buildButton2.setDisable(false);
-				
 				model.newRound.setValue(false);
 			}
 			
 		});
 		
-		model.getCurrentPlayer().getBuildings().addListener(new ListChangeListener<Card>() {
-			@Override
-			public void onChanged(javafx.collections.ListChangeListener.Change<? extends Card> arg0) {
-				// 
-				if(buildButton1.getText()=="X"){
-					buildButton1.setText("");
-					buildButton1.setDisable(true);
-				} else if (buildButton2.getText()=="X"){
-					buildButton2.setText("");
-					buildButton2.setDisable(true);
-				}
-				
-			}
-		});
+		GetHandListener(true);
+		GetHandListener(false);
 		
 		model.getIsPlayer1CurrentPlayer().addListener(new ChangeListener<Boolean>(){
 
@@ -66,9 +53,13 @@ public class BuilderPresenter implements Initializable {
 				// TODO Auto-generated method stub
 				if(buildButton1.isDisabled()==false){
 					buildButton1.setText("2");
+					System.out.println(model.buildButtonPressed.getValue());
+					model.buildButtonPressed.set(false);
+					System.out.println(model.buildButtonPressed.getValue());
 				}
 				if(buildButton2.isDisabled()==false){
 					buildButton2.setText("2");
+					model.buildButtonPressed.set(false);
 				}	
 
 			}
@@ -80,20 +71,16 @@ public class BuilderPresenter implements Initializable {
 	@FXML
     private void actionBuild(ActionEvent event){
 		if(model.getCurrentPlayer().getHand().size() > 0){
-			if(buttonUsed == false){
-				buttonUsed = true;
+			if(((Button)event.getSource()).getText()!="X"){
 				if(model.getCurrentPlayer().getMoney().getValue()>1){
 					((Button)event.getSource()).setText("X");
-					model.builder(true);
-					System.out.print(buttonUsed);
+					model.buildButtonPressed.set(true);
 				} else {
-					((Button)event.getSource()).setText("2");
-					model.builder(false);
 					System.out.print("Need more money");
 				}		
 			} else{
-				buttonUsed = false;
 				((Button)event.getSource()).setText("2");
+				model.buildButtonPressed.set(false);
 			}
 		} else {
 			System.out.print("No cards in your hand");
@@ -109,4 +96,25 @@ public class BuilderPresenter implements Initializable {
 //		}
 		
     }
+	
+	void disableButton(Button button){
+		button.setText("");
+		button.setDisable(true);
+		model.buildButtonPressed.set(false);
+	}
+	
+	void GetHandListener(boolean isPlayer1){
+		model.getPlayer(isPlayer1).getBuildings().addListener(new ListChangeListener<Card>() {
+			@Override
+			public void onChanged(javafx.collections.ListChangeListener.Change<? extends Card> arg0) {
+				// Update board view.
+				if(buildButton1.getText()=="X"){
+					disableButton(buildButton1);
+				}
+				if (buildButton2.getText()=="X"){
+					disableButton(buildButton2);
+				}
+			}
+		});
+	}
 }

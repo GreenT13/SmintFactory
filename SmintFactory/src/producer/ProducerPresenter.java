@@ -51,8 +51,6 @@ public class ProducerPresenter implements Initializable {
 		} else {
 			System.out.println("Need more money for" + ((Button)event.getSource()).getId());
 		}
-    	
-    	
     }
 	
 	

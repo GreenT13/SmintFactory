@@ -26,9 +26,6 @@ public class SupplierPresenter implements Initializable {
 	
 	@FXML Button supplyButton1, supplyButton2;
 	
-	public SimpleBooleanProperty handChange = new SimpleBooleanProperty(false);
-	public SimpleBooleanProperty buildingsChange = new SimpleBooleanProperty(false);
-	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		// Bind model.labelText to the label.
@@ -40,30 +37,14 @@ public class SupplierPresenter implements Initializable {
 				// TODO Auto-generated method stub
 				supplyButton1.setDisable(false);
 				supplyButton2.setDisable(false);
-//				startButton.setDisable(false);
-//				buildButton1.setDisable(false);
-//				buildButton2.setDisable(false);
 				model.newRound.setValue(false);
 			}
 			
 		});
 		
-		model.getCurrentPlayer().getHand().addListener(new ListChangeListener<Card>() {
-			@Override
-			public void onChanged(javafx.collections.ListChangeListener.Change<? extends Card> arg0) {
-				// Update board view.
-				if(model.getSupplyButton1Used().getValue()==true){
-					supplyButton1.setText("");
-					supplyButton1.setDisable(true);
-				}
-				if (model.getSupplyButton2Used().getValue()==true){
-					supplyButton2.setText("");
-					supplyButton2.setDisable(true);
-				}
-				
-			}
-		});
-		
+		GetHandListener(true);
+		GetHandListener(false);
+
 		model.getIsPlayer1CurrentPlayer().addListener(new ChangeListener<Boolean>(){
 
 			@Override
@@ -71,52 +52,52 @@ public class SupplierPresenter implements Initializable {
 				// TODO Auto-generated method stub
 				if(supplyButton1.isDisabled()==false){
 					supplyButton1.setText("");
+					model.supplyButtonPressed.set(false);
 				}
 				if(supplyButton2.isDisabled()==false){
 					supplyButton2.setText("");
+					model.supplyButtonPressed.set(false);
 				}	
-
 			}
-			
 		});
-		
-		
+
 	}
 	
 	@FXML
     private void actionSupply(ActionEvent event){
+		System.out.println(model.getCurrentPlayer().getHand());
 		if (((Button)event.getSource()).getText()==""){
-			// Put X
 			((Button)event.getSource()).setText("X");
-			// Allow buying
-			System.out.println(((Button)event.getSource()).getId());
-			
-			if(((Button)event.getSource()).getId()==supplyButton1.getId()){
-				model.getSupplyButton1Used().set(true);
-			} else if (((Button)event.getSource()).getId()==supplyButton2.getId()){
-				model.getSupplyButton2Used().set(true);
-			}
-			model.supplier(true);
-			
+			model.supplyButtonPressed.set(true);	
 		} else{
-			// Put ""
 			((Button)event.getSource()).setText("");
-			// Disallow buying
-			if(((Button)event.getSource()).getId()==supplyButton1.getId()){
-				model.getSupplyButton1Used().set(false);
-			} else if (((Button)event.getSource()).getId()==supplyButton2.getId()){
-				model.getSupplyButton2Used().set(false);
-			}
-			model.supplier(false);
-		}
-		System.out.println("button 1 "+ model.getSupplyButton1Used().getValue());
-		System.out.println("button 2 "+ model.getSupplyButton2Used().getValue());
-		
+			model.supplyButtonPressed.set(false);
+		}	
     }
-
+	
+	void disableButton(Button button){
+		button.setText("");
+		button.setDisable(true);
+		model.supplyButtonPressed.set(false);
+	}
+	
 	public void cardBorders(){
 		
 	}
 	
+	void GetHandListener(boolean isPlayer1){
+		model.getPlayer(isPlayer1).getHand().addListener(new ListChangeListener<Card>() {
+			@Override
+			public void onChanged(javafx.collections.ListChangeListener.Change<? extends Card> arg0) {
+				// Update board view.
+				if(supplyButton1.getText()=="X"){
+					disableButton(supplyButton1);
+				}
+				if (supplyButton2.getText()=="X"){
+					disableButton(supplyButton2);
+				}
+			}
+		});
+	}
 	
 }

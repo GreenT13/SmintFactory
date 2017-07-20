@@ -7,3 +7,9 @@
 #paneYellow {
 	-fx-background-color: yellow;
 }
+
+.border {
+	-fx-border-color: black;
+	-fx-border-style: solid;
+    -fx-border-width: 5px;
+}

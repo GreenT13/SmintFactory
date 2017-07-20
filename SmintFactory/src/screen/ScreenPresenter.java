@@ -16,9 +16,12 @@ import card.model.Card;
 import card.model.CardId;
 import card.model.CardMapper;
 import card.model.ParentCardId;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -57,22 +60,30 @@ public class ScreenPresenter implements Initializable {
 	@FXML
 	HBox cardBox, playerBox1, playerBox2, plansBox1, plansBox2, buildingsBox1, buildingsBox2;
 
+	
+	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		
+		
+		
 		boardList = new ArrayList<ParentCardId>();
 		handListPlayer1 = new ArrayList<ParentCardId>();
 		handListPlayer2 = new ArrayList<ParentCardId>();
 		buildingsListPlayer1 = new ArrayList<ParentCardId>();
 		buildingsListPlayer2 = new ArrayList<ParentCardId>();
 		
+		//Player views
 		FXMLView player1 = new Player1View();
 		FXMLView player2 = new Player2View();
 		
+		//Action cards
 		FXMLView producer = new ProducerView();
 		FXMLView builder = new BuilderView();
 		FXMLView supplier = new SupplierView();
 		FXMLView starter = new StarterView();
 		
+		//Layout
 		leftActionBox.getChildren().add(producer.getView());
 		leftActionBox.getChildren().add(starter.getView());
 		rightActionBox.getChildren().add(supplier.getView());
@@ -80,6 +91,7 @@ public class ScreenPresenter implements Initializable {
 		playerBox1.getChildren().add(player1.getView());
 		playerBox2.getChildren().add(player2.getView());
 		
+		//Gets a three card board
 		model.getBoard().addListener(new ListChangeListener<Card>() {
 			@Override
 			public void onChanged(javafx.collections.ListChangeListener.Change<? extends Card> arg0) {
@@ -89,37 +101,16 @@ public class ScreenPresenter implements Initializable {
 			}
 		});
 		
-		model.getPlayer(true).getHand().addListener(new ListChangeListener<Card>() {
-			@Override
-			public void onChanged(javafx.collections.ListChangeListener.Change<? extends Card> arg0) {
-				// Update plans view.
-				updatePlans(arg0, true);
-			}
-		});
 		
-		model.getPlayer(false).getHand().addListener(new ListChangeListener<Card>() {
-			@Override
-			public void onChanged(javafx.collections.ListChangeListener.Change<? extends Card> arg0) {
-				// Update plans view.
-				updatePlans(arg0, false);
-			}
-		});
 		
-		model.getPlayer(true).getBuildings().addListener(new ListChangeListener<Card>() {
-			@Override
-			public void onChanged(javafx.collections.ListChangeListener.Change<? extends Card> arg0) {
-				// Update buildings view.
-				updateBuildings(arg0, true);
-			}
-		});
-		
-		model.getPlayer(false).getBuildings().addListener(new ListChangeListener<Card>() {
-			@Override
-			public void onChanged(javafx.collections.ListChangeListener.Change<? extends Card> arg0) {
-				// Update buildings view.
-				updateBuildings(arg0, false);
-			}
-		});
+		plansChangeListener(true);
+		plansChangeListener(false);
+		buildingChangeListener(true);
+		buildingChangeListener(false);
+		addSupplyBorderListener(true);
+		addSupplyBorderListener(false);
+		addBuildBorderListener(true);
+		addBuildBorderListener(false);
 
 		updateBoardUI(null);
 	}
@@ -147,48 +138,46 @@ public class ScreenPresenter implements Initializable {
 			addCard(card.getCardId());
 		}
 	}
-	
-	List<ParentCardId> getHandList(boolean isFirstPlayer) {
-		if (isFirstPlayer) {
+
+	List<ParentCardId> getList(boolean isFirstPlayer, boolean plansList, boolean buildingsList) {
+		if (isFirstPlayer & plansList) {
 			return handListPlayer1;
-		} else {
-			return handListPlayer2;
-		}
-	}
-	
-	HBox getPlansBox(boolean isFirstPlayer) {
-		if (isFirstPlayer) {
-			return plansBox1;
-		} else {
-			return plansBox2;
-		}
-	}
-	
-	List<ParentCardId> getBuildingsList(boolean isFirstPlayer) {
-		if (isFirstPlayer) {
+		} else if (isFirstPlayer & buildingsList){
 			return buildingsListPlayer1;
-		} else {
+		} else if (!isFirstPlayer & plansList){
+			return handListPlayer2;
+		}else {
 			return buildingsListPlayer2;
 		}
 	}
 	
-	HBox getBuildingsBox(boolean isFirstPlayer) {
-		if (isFirstPlayer) {
+	
+	
+	HBox getBox(boolean isFirstPlayer, boolean isPlans, boolean isBuildings){
+		if(isFirstPlayer & isPlans){
+			return plansBox1;
+		} else if (isFirstPlayer & isBuildings){
 			return buildingsBox1;
+		} else if (!isFirstPlayer & isPlans){
+			return plansBox2;
 		} else {
 			return buildingsBox2;
 		}
 	}
 	
-	void updatePlans(javafx.collections.ListChangeListener.Change<? extends Card> arg0, boolean isFirstPlayer) {
-		List<ParentCardId> list = getHandList(isFirstPlayer);
-		HBox plansBox = getPlansBox(isFirstPlayer);
+	HBox getCardBox(){
+		return cardBox;
+	}
+	
+	void updateBox(javafx.collections.ListChangeListener.Change<? extends Card> arg0, boolean isFirstPlayer, boolean isPlans, boolean isBuildings) {
+		List<ParentCardId> list = getList(isFirstPlayer, isPlans, isBuildings);
+		HBox Box = getBox(isFirstPlayer, isPlans, isBuildings);
 		arg0.next();
 		for (Card c : arg0.getRemoved()) {
 			// Voor elke kaart die verwijderd is, verwijder ook de kaart op het scherm.
 			for (ParentCardId card : list) {
 				if (card.getCardId().equals(c.getCardId())) {
-					plansBox.getChildren().remove(card.getParent());
+					Box.getChildren().remove(card.getParent());
 					list.remove(card);
 					break;
 				}
@@ -198,40 +187,127 @@ public class ScreenPresenter implements Initializable {
 			// Voor elke kaart die toegevoegd is, voeg deze ook toe aan het scherm.
 			FXMLView cardview = new CardView();
 			((CardPresenter) cardview.getPresenter()).setCard(CardMapper.createCard(card.getCardId()));
-			plansBox.getChildren().add(cardview.getView());			
+			Box.getChildren().add(cardview.getView());			
 			list.add(new ParentCardId(cardview.getView(), ((CardPresenter) cardview.getPresenter()).getCard().getCardId()));
 		}
 	}
 	
-	void updateBuildings(javafx.collections.ListChangeListener.Change<? extends Card> arg0, boolean isFirstPlayer) {
-		List<ParentCardId> list = getBuildingsList(isFirstPlayer);
-		HBox buildingsBox = getBuildingsBox(isFirstPlayer);
-		arg0.next();
-		for (Card c : arg0.getRemoved()) {
-			// Voor elke kaart die verwijderd is, verwijder ook de kaart op het scherm.
-			for (ParentCardId card : list) {
-				if (card.getCardId().equals(c.getCardId())) {
-					buildingsBox.getChildren().remove(card.getParent());
-					list.remove(card);
-					break;
+	void addSupplyBorderListener(boolean isPlayer1){
+		model.getSupplyButtonPressed().addListener(new ChangeListener<Boolean>(){
+			@Override
+			public void changed(ObservableValue<? extends Boolean> arg0, Boolean arg1, Boolean arg2) {
+				// TODO Auto-generated method stub
+				if(model.getSupplyButtonPressed().getValue()==true){
+					addBorder(isPlayer1, true, false);
+				} else{
+					removeBorder(isPlayer1, true, false);
 				}
+				
+			}
+		});
+	}
+	
+	void addBuildBorderListener(boolean isPlayer1){
+		model.getBuildButtonPressed().addListener(new ChangeListener<Boolean>(){
+			@Override
+			public void changed(ObservableValue<? extends Boolean> arg0, Boolean arg1, Boolean arg2) {
+				// TODO Auto-generated method stub
+				if(isPlayer1 == model.getIsPlayer1CurrentPlayer().getValue() & model.buildButtonPressed.getValue()){
+					addBorder(isPlayer1, false, true);
+				} else{
+					removeBorder(isPlayer1, false, true);
+				}
+				
+			}
+		});
+	}
+	
+//	void addBorder(boolean isPlayer1, boolean onBoard, boolean inHand){
+//		if(onBoard){
+//			List<ParentCardId> list = getBoardList();
+//			for(ParentCardId card:list){
+//				if(model.getSupplyButtonPressed().getValue()){
+//					card.getParent().getStyleClass().add("border");
+//				} else {
+//					card.getParent().getStyleClass().remove("border");
+//				}
+//			}
+//		} else if(inHand){
+//			List<ParentCardId> list = getList(isPlayer1, true, false);
+//			for(ParentCardId card:list){
+//				if(model.getBuildButtonPressed().getValue()){
+//					card.getParent().getStyleClass().add("border");
+//				} else {
+//					card.getParent().getStyleClass().remove("border");
+//				}
+//			}
+//		}
+//	}
+	
+	void addBorder(boolean isPlayer1, boolean onBoard, boolean inHand){
+		if(onBoard){
+			List<ParentCardId> list = getBoardList();
+			for(ParentCardId card:list){
+				card.getParent().getStyleClass().add("border");
+			}
+		} else if(inHand){
+			List<ParentCardId> list = getList(isPlayer1, true, false);
+			for(ParentCardId card:list){
+				card.getParent().getStyleClass().add("border");
 			}
 		}
-		for (Card card : arg0.getAddedSubList()) {
-			// Voor elke kaart die toegevoegd is, voeg deze ook toe aan het scherm.
-			FXMLView cardview = new CardView();
-			((CardPresenter) cardview.getPresenter()).setCard(CardMapper.createCard(card.getCardId()));
-			buildingsBox.getChildren().add(cardview.getView());			
-			list.add(new ParentCardId(cardview.getView(), ((CardPresenter) cardview.getPresenter()).getCard().getCardId()));
+	}
+	
+	void removeBorder(boolean isPlayer1, boolean onBoard, boolean inHand){
+		if(onBoard){
+			List<ParentCardId> list = getBoardList();
+			for(ParentCardId card:list){
+				card.getParent().getStyleClass().remove("border");
+			}
+		} else if(inHand){
+			List<ParentCardId> list = getList(isPlayer1, true, false);
+			for(ParentCardId card:list){
+				card.getParent().getStyleClass().remove("border");
+			}
 		}
 	}
-
+	
 	
 	void addCard(CardId cardId) {
 		FXMLView cardview = new CardView();
 		((CardPresenter) cardview.getPresenter()).setCard(CardMapper.createCard(cardId));
 		cardBox.getChildren().add(cardview.getView());		
 		boardList.add(new ParentCardId(cardview.getView(), ((CardPresenter) cardview.getPresenter()).getCard().getCardId()));
+	}
+	
+
+	void plansChangeListener(boolean isPlayer1){
+		model.getPlayer(isPlayer1).getHand().addListener(new ListChangeListener<Card>() {
+			@Override
+			public void onChanged(javafx.collections.ListChangeListener.Change<? extends Card> arg0) {
+				// Update plans view.
+				updateBox(arg0, isPlayer1, true, false);
+			}
+		});
+	}
+	
+	
+	void buildingChangeListener(boolean isPlayer1){
+		model.getPlayer(isPlayer1).getBuildings().addListener(new ListChangeListener<Card>() {
+			@Override
+			public void onChanged(javafx.collections.ListChangeListener.Change<? extends Card> arg0) {
+				// Update buildings view.
+				updateBox(arg0, isPlayer1, false, true);
+			}
+		});
+	}
+
+	public List<ParentCardId> getBoardList() {
+		return boardList;
+	}
+
+	public void setBoardList(List<ParentCardId> boardList) {
+		this.boardList = boardList;
 	}
 	
 	

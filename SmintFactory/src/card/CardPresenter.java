@@ -8,6 +8,8 @@ import javax.inject.Inject;
 import card.model.Card;
 import card.model.CardMapper;
 import card.model.Type;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -44,6 +46,19 @@ public class CardPresenter implements Initializable {
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		//
+		
+		model.supplyButtonPressed.addListener(new ChangeListener<Boolean>(){
+			@Override
+			public void changed(ObservableValue<? extends Boolean> arg0, Boolean arg1, Boolean arg2) {
+				// TODO Auto-generated method stub
+				if(model.supplyButtonPressed.getValue()==true){
+					cardPane.getStyleClass().add("pick");
+				} else{
+					cardPane.getStyleClass().remove("pick");
+				}
+			}
+			
+		});
 	}
 	
 	

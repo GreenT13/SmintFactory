@@ -6,6 +6,7 @@ import card.model.CardMapper;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Button;
 
 /**
  * Class that contains all the data used in the program.
@@ -18,8 +19,8 @@ public class Model {
 	ObservableList<Card> board;
 	ObservableList<Card> deck;
 	public SimpleBooleanProperty newRound;
-	public SimpleBooleanProperty supplyButton1Used;
-	public SimpleBooleanProperty supplyButton2Used;
+	public SimpleBooleanProperty supplyButtonPressed;
+	public SimpleBooleanProperty buildButtonPressed;
 	
 	
 	
@@ -38,8 +39,8 @@ public class Model {
 		board = FXCollections.observableArrayList();
 		deck = FXCollections.observableArrayList();
 		newRound = new SimpleBooleanProperty(false);
-		supplyButton1Used = new SimpleBooleanProperty(false);
-		supplyButton2Used = new SimpleBooleanProperty(false);
+		supplyButtonPressed = new SimpleBooleanProperty(false);
+		buildButtonPressed = new SimpleBooleanProperty(false);
 
 		
 		createAndShuffleDeck();
@@ -59,39 +60,47 @@ public class Model {
 				// Is gebouwd, doet niks
 			} 
 			else if(isInHand) {
-				if(getCurrentPlayer().playerCanBuild & moneyCheck){
+				if(buildButtonPressed.getValue() & moneyCheck){
 					// van hand -> gebouwd
 					// System.out.println("Bouw mij!");
 					if(getCurrentPlayer().getHand().contains(CardMapper.createCard(cardId))){
 						getCurrentPlayer().hand.remove(CardMapper.createCard(cardId));
 						getCurrentPlayer().buildings.add(CardMapper.createCard(cardId));
-						getCurrentPlayer().playerCanBuy=false;
+						buildButtonPressed.setValue(false);
 						getCurrentPlayer().money.setValue(getCurrentPlayer().money.getValue()-2);
+						updatePlayerProperties();
 						changeTurn();
 					} else {
 						//
 					}
-				} else if (getCurrentPlayer().playerCanBuild){
+				} else if (buildButtonPressed.getValue()){
 					System.out.println("Not enough money");
 				} else if (!moneyCheck(getCurrentPlayer().money.getValue(), 2)){
 					System.out.println("Press button first");
 				}
 			} else {
 				// van bord -> hand
-				if(moneyCheck == true){
+				if(moneyCheck & supplyButtonPressed.getValue()){
 					board.remove(CardMapper.createCard(cardId));
 					getCurrentPlayer().hand.add(CardMapper.createCard(cardId));
-					getCurrentPlayer().playerCanBuy=false;
+					supplyButtonPressed.setValue(false);
 					getCurrentPlayer().money.setValue((getCurrentPlayer().money.getValue() - CardMapper.createCard(cardId).getCost()));
 					changeTurn();
-					supplier(false);
-				} else if (getCurrentPlayer().playerCanBuy){
+					//supplier(false);
+				} else if (supplyButtonPressed.getValue()){
 					System.out.println("Not enough money");
 				} else {
 					System.out.println("Buy button first!");
 				}
 				
 			}
+	}
+	
+	void updatePlayerProperties(){
+		for(Card card:getCurrentPlayer().getBuildings()){
+			getCurrentPlayer().getIncome().setValue(getCurrentPlayer().getIncome().getValue()+card.getExtraMoney());
+			getCurrentPlayer().getPoints().setValue(getCurrentPlayer().getPoints().getValue()+card.getStars());
+		}
 	}
 	
 	public Player getPlayer(boolean isFirstPlayer){
@@ -163,7 +172,6 @@ public class Model {
 			deck.remove(0);
 		}
 	}
-
 	
 	/* Functions from cards in the middle. */
 	
@@ -178,12 +186,12 @@ public class Model {
 	}
 	
 	public void builder(boolean buttonUsed){
-		getCurrentPlayer().playerCanBuild=buttonUsed;
+		//getCurrentPlayer().playerCanBuild=buttonUsed;
 		//changeTurn();
 	}
 	
 	public void supplier(boolean buttonUsed){
-		getCurrentPlayer().playerCanBuy=buttonUsed;
+//		getCurrentPlayer().playerCanBuy=buttonUsed;
 		//changeTurn();
 	}
 	
@@ -221,20 +229,20 @@ public class Model {
 		this.newRound = newRound;
 	}
 
-	public SimpleBooleanProperty getSupplyButton1Used() {
-		return supplyButton1Used;
+	public SimpleBooleanProperty getSupplyButtonPressed() {
+		return supplyButtonPressed;
 	}
 
-	public void setSupplyButton1Used(SimpleBooleanProperty supplyButton1Used) {
-		this.supplyButton1Used = supplyButton1Used;
+	public void setSupplyButtonPressed(SimpleBooleanProperty supplyButtonPressed) {
+		this.supplyButtonPressed = supplyButtonPressed;
 	}
 
-	public SimpleBooleanProperty getSupplyButton2Used() {
-		return supplyButton2Used;
+	public SimpleBooleanProperty getBuildButtonPressed() {
+		return buildButtonPressed;
 	}
 
-	public void setSupplyButton2Used(SimpleBooleanProperty supplyButton2Used) {
-		this.supplyButton2Used = supplyButton2Used;
+	public void setBuildButtonPressed(SimpleBooleanProperty buildButtonPressed) {
+		this.buildButtonPressed = buildButtonPressed;
 	}
 	
 	

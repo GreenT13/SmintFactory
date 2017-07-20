@@ -58,12 +58,10 @@ public class PlayerPresenter1 implements Initializable {
 				if (arg0 != null && arg0.getValue()) {
 					// Boolean is true.
 					playerPane1.getStyleClass().add("turn");
-					playerPane1.getStyleClass().remove("noTurn");
 					passButton1.setVisible(true);
 					
 				} else {
 					// Boolean is false (or null)
-					playerPane1.getStyleClass().add("noTurn");
 					playerPane1.getStyleClass().remove("turn");
 					passButton1.setVisible(false);
 				}
