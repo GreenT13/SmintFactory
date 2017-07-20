@@ -1,0 +1,9 @@
+.turn {
+	-fx-border-color:red;
+	-fx-background-color:white;
+}
+
+.noTurn {
+	-fx-border-color:none;
+	-fx-background-color:white;
+}

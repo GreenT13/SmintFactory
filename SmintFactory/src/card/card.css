@@ -1,0 +1,9 @@
+#paneGreen {
+	-fx-background-color: green;
+}
+#paneRed {
+	-fx-background-color: red;
+}
+#paneYellow {
+	-fx-background-color: yellow;
+}
