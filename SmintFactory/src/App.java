@@ -9,7 +9,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-    	// Dit is een  verandering.
+    	// Dit is een  verandering met push.
     	// Create a new window which loads 'screen.fxml' into it.
     	ScreenView appView = new ScreenView();
         Scene scene = new Scene(appView.getView());
