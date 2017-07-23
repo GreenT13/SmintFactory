@@ -53,9 +53,7 @@ public class BuilderPresenter implements Initializable {
 				// TODO Auto-generated method stub
 				if(buildButton1.isDisabled()==false){
 					buildButton1.setText("2");
-					System.out.println(model.buildButtonPressed.getValue());
 					model.buildButtonPressed.set(false);
-					System.out.println(model.buildButtonPressed.getValue());
 				}
 				if(buildButton2.isDisabled()==false){
 					buildButton2.setText("2");
@@ -76,14 +74,14 @@ public class BuilderPresenter implements Initializable {
 					((Button)event.getSource()).setText("X");
 					model.buildButtonPressed.set(true);
 				} else {
-					System.out.print("Need more money");
+					model.addGameConsoleText("Need more money");
 				}		
 			} else{
 				((Button)event.getSource()).setText("2");
 				model.buildButtonPressed.set(false);
 			}
 		} else {
-			System.out.print("No cards in your hand");
+			model.addGameConsoleText("No cards in your hand");
 		}
 		
 		

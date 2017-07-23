@@ -4,9 +4,9 @@ import card.model.Card;
 import card.model.CardId;
 import card.model.CardMapper;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Button;
 
 /**
  * Class that contains all the data used in the program.
@@ -21,11 +21,12 @@ public class Model {
 	public SimpleBooleanProperty newRound;
 	public SimpleBooleanProperty supplyButtonPressed;
 	public SimpleBooleanProperty buildButtonPressed;
-	
-	
+	public SimpleBooleanProperty sevenPointsReached;
+	public SimpleStringProperty gameConsoleText;
 	
 	boolean hasPreviousPlayerPassed;
 	Player player1, player2;
+	Player nobody;
 
 	public Model() {
 		// Instantiate objects + give default value.
@@ -41,6 +42,11 @@ public class Model {
 		newRound = new SimpleBooleanProperty(false);
 		supplyButtonPressed = new SimpleBooleanProperty(false);
 		buildButtonPressed = new SimpleBooleanProperty(false);
+		sevenPointsReached = new SimpleBooleanProperty(false);
+		
+		nobody = new Player();
+		nobody.setPlayername("Nobody");
+		gameConsoleText = new SimpleStringProperty("Game starts");
 
 		
 		createAndShuffleDeck();
@@ -53,6 +59,10 @@ public class Model {
 		} else{
 			return false;
 		}
+	}
+	
+	public void addGameConsoleText(String text){
+		gameConsoleText.setValue(text + System.lineSeparator() + gameConsoleText.getValue());
 	}
 	
 	public void clickCard(CardId cardId, boolean isInHand, boolean isBuilt, boolean moneyCheck) {
@@ -68,39 +78,41 @@ public class Model {
 						getCurrentPlayer().buildings.add(CardMapper.createCard(cardId));
 						buildButtonPressed.setValue(false);
 						getCurrentPlayer().money.setValue(getCurrentPlayer().money.getValue()-2);
-						updatePlayerProperties();
 						changeTurn();
 					} else {
 						//
 					}
 				} else if (buildButtonPressed.getValue()){
-					System.out.println("Not enough money");
+					addGameConsoleText("Not enough money to buy this card.");
 				} else if (!moneyCheck(getCurrentPlayer().money.getValue(), 2)){
-					System.out.println("Press button first");
+					addGameConsoleText("Press the supply button before attempting to buy a card.");
 				}
 			} else {
 				// van bord -> hand
-				if(moneyCheck & supplyButtonPressed.getValue()){
+				if(moneyCheck & supplyButtonPressed.getValue() & !isInHand & !isBuilt){
 					board.remove(CardMapper.createCard(cardId));
 					getCurrentPlayer().hand.add(CardMapper.createCard(cardId));
 					supplyButtonPressed.setValue(false);
 					getCurrentPlayer().money.setValue((getCurrentPlayer().money.getValue() - CardMapper.createCard(cardId).getCost()));
 					changeTurn();
-					//supplier(false);
 				} else if (supplyButtonPressed.getValue()){
-					System.out.println("Not enough money");
+					addGameConsoleText("Not enough money to build this card.");
 				} else {
-					System.out.println("Buy button first!");
+					addGameConsoleText("Press the buy button before attempting to build.");
 				}
 				
 			}
 	}
 	
-	void updatePlayerProperties(){
-		for(Card card:getCurrentPlayer().getBuildings()){
-			getCurrentPlayer().getIncome().setValue(getCurrentPlayer().getIncome().getValue()+card.getExtraMoney());
-			getCurrentPlayer().getPoints().setValue(getCurrentPlayer().getPoints().getValue()+card.getStars());
+	void updatePlayerProperties(boolean isPlayer1){
+		int totalIncome=1, totalPoints=0;
+		for(Card card:getPlayer(isPlayer1).getBuildings()){
+			totalIncome = totalIncome + card.getExtraMoney();
+			totalPoints = totalPoints + card.getStars();
 		}
+		getPlayer(isPlayer1).getIncome().set(totalIncome);
+		getPlayer(isPlayer1).getPoints().set(totalPoints);
+		getPlayer(isPlayer1).getMoney().setValue(getPlayer(isPlayer1).getMoney().getValue()+getPlayer(isPlayer1).getIncome().getValue());
 	}
 	
 	public Player getPlayer(boolean isFirstPlayer){
@@ -119,7 +131,6 @@ public class Model {
 		if(!player1.hasPassed & !player2.hasPassed){
 			isPlayer1CurrentPlayer.setValue(!isPlayer1CurrentPlayer.getValue());
 		}
-		
 	}
 	
 	public void pass(){	
@@ -127,11 +138,11 @@ public class Model {
 		
 		if(!player1.hasPassed & !player2.hasPassed){
 			getCurrentPlayer().hasPassed = true;
-			System.out.println(getCurrentPlayer().getPlayername() + getCurrentPlayer().hasPassed);
+			addGameConsoleText(getCurrentPlayer().getPlayername() + " has passed.");
 			isPlayer1CurrentPlayer.setValue(!isPlayer1CurrentPlayer.getValue());
 		} else {
 			getCurrentPlayer().hasPassed = true;
-			System.out.println(getCurrentPlayer().getPlayername() + getCurrentPlayer().hasPassed);
+			System.out.println(getCurrentPlayer().getPlayername() + " has passed.");
 		}
 		
 
@@ -141,15 +152,21 @@ public class Model {
 	}
 	
 	void endRound(){
-		newRound(true);
-		newRound(false);
-		fillBoard();
-		newRound.setValue(true);
+		getSevenPointsReached();
+		if(sevenPointsReached.getValue()==true){
+			determineWinner();
+		} else{
+			addGameConsoleText("Both players have passed. New round!");
+			newRound(true);
+			newRound(false);
+			fillBoard();
+			newRound.setValue(true);
+		}
 	}
 	
 	void newRound(boolean isPlayer1){
 		isPlayer1CurrentPlayer.set(isPlayer1);
-		getCurrentPlayer().money.setValue((getCurrentPlayer().getMoney().getValue() + getCurrentPlayer().getIncome().getValue()));
+		updatePlayerProperties(isPlayer1);
 		// income
 		// points
 		getCurrentPlayer().hasPassed = false;
@@ -173,6 +190,40 @@ public class Model {
 		}
 	}
 	
+	public void getSevenPointsReached(){
+		if(player1.getPoints().getValue()>=7 | player2.getPoints().getValue()>=7){
+			sevenPointsReached.setValue(true);
+		} else {
+			sevenPointsReached.setValue(false);
+		}
+	}
+	
+	public Player determineWinner(){
+		if (sevenPointsReached.getValue() == true){
+			if(player1.getPoints().getValue()>player2.getPoints().getValue()){
+				System.out.println("Player 1 wins the game!");
+				return player1;
+			} else if (player2.getPoints().getValue()>player1.getPoints().getValue()){
+				System.out.println("Player 2 wins the game!");
+				return player2;
+			} else {
+				if(player1.getMoney().getValue()>player2.getMoney().getValue()){
+					System.out.println("Player 1 wins the game!");
+					return player1;
+				} else if (player2.getMoney().getValue()>player1.getMoney().getValue()){
+					System.out.println("Player 2 wins the game!");
+					return player2;
+				} else{
+					System.out.println("It's a tie!");
+					return nobody;
+				}
+			}
+		} else{
+			return nobody;
+		}
+		
+	}
+	
 	/* Functions from cards in the middle. */
 	
 	public void produce(){
@@ -182,6 +233,7 @@ public class Model {
 	
 	public void starter(){
 		isPlayer1StartPlayer.set(isPlayer1CurrentPlayer.getValue());
+		addGameConsoleText(getPlayer(isPlayer1CurrentPlayer.getValue()).getPlayername() + " is now the Starting Player.");
 		changeTurn();
 	}
 	
@@ -244,7 +296,6 @@ public class Model {
 	public void setBuildButtonPressed(SimpleBooleanProperty buildButtonPressed) {
 		this.buildButtonPressed = buildButtonPressed;
 	}
-	
-	
+
 	
 }

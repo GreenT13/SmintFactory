@@ -42,8 +42,7 @@ public class SupplierPresenter implements Initializable {
 			
 		});
 		
-		GetHandListener(true);
-		GetHandListener(false);
+		GetHandListener();
 
 		model.getIsPlayer1CurrentPlayer().addListener(new ChangeListener<Boolean>(){
 
@@ -68,7 +67,7 @@ public class SupplierPresenter implements Initializable {
 		System.out.println(model.getCurrentPlayer().getHand());
 		if (((Button)event.getSource()).getText()==""){
 			((Button)event.getSource()).setText("X");
-			model.supplyButtonPressed.set(true);	
+			model.supplyButtonPressed.set(true);
 		} else{
 			((Button)event.getSource()).setText("");
 			model.supplyButtonPressed.set(false);
@@ -81,12 +80,8 @@ public class SupplierPresenter implements Initializable {
 		model.supplyButtonPressed.set(false);
 	}
 	
-	public void cardBorders(){
-		
-	}
-	
-	void GetHandListener(boolean isPlayer1){
-		model.getPlayer(isPlayer1).getHand().addListener(new ListChangeListener<Card>() {
+	void GetHandListener(){
+		model.getBoard().addListener(new ListChangeListener<Card>() {
 			@Override
 			public void onChanged(javafx.collections.ListChangeListener.Change<? extends Card> arg0) {
 				// Update board view.

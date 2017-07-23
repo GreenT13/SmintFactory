@@ -16,6 +16,7 @@ import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import model.Model;
 
 public class CardPresenter implements Initializable {
@@ -45,8 +46,7 @@ public class CardPresenter implements Initializable {
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		//
-		
+		//	
 		model.supplyButtonPressed.addListener(new ChangeListener<Boolean>(){
 			@Override
 			public void changed(ObservableValue<? extends Boolean> arg0, Boolean arg1, Boolean arg2) {
@@ -71,19 +71,17 @@ public class CardPresenter implements Initializable {
 		this.card = card;
 		
 		// Set the text of the labels.
-		cost.setText(card.getCost().toString());
+		cost.setText("Cost: " + card.getCost().toString());
 		name.setText(card.getName());
-		stars.setText(card.getStars().toString());
-		extraMoney.setText(card.getExtraMoney().toString());
+		stars.setText("Stars: " + card.getStars().toString());
+		extraMoney.setText("Income: " + card.getExtraMoney().toString());
 		
 		// Set the background color.
-		if (card.getType().equals(Type.GREEN)) {
-			cardPane.setId("paneGreen");
-		} else if (card.getType().equals(Type.RED)) {
-			cardPane.setId("paneRed");
-		} else if (card.getType().equals(Type.YELLOW)) {
-			cardPane.setId("paneYellow");
-		}
+		backgroundColor(card.getType());
+	}
+	
+	void backgroundColor(String color){
+		cardPane.setStyle(cardPane.getStyle() + "-fx-background-color: " + color + ";");
 	}
 	
 	public Card getCard() {
@@ -102,5 +100,24 @@ public class CardPresenter implements Initializable {
 			model.clickCard(card.getCardId(), true, true, true);
 		}
 
+	}
+	
+	public void toFrontCard(MouseEvent event){
+		if(model.supplyButtonPressed.getValue()==true & ((Pane)event.getSource()).getParent().getId().contains("cardBox")){
+			((Pane)event.getSource()).getStyleClass().add("pickBorder");
+		}
+		if (model.buildButtonPressed.getValue()==true & ((Pane)event.getSource()).getParent().getId().contains("plansBox")){
+			((Pane)event.getSource()).getStyleClass().add("pickBorder");
+		}
+		
+		
+	}
+	
+	public void toBackCard(MouseEvent event){
+		((Pane)event.getSource()).getStyleClass().remove("pickBorder");
+//		if(((Pane)event.getSource()).getParent().getId().contains("plansBox")){
+//			System.out.println("2222as");
+//
+//		}
 	}
 }

@@ -1,5 +1,5 @@
 package card.model;
 
 public enum Type {
-	RED, GREEN, YELLOW
+	RED, GREEN, YELLOW, AQUAMARINE
 }

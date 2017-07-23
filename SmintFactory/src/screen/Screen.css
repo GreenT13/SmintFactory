@@ -1,3 +1,8 @@
 #topPane {
 	-fx-background-color: green;
 }
+
+#endGame{
+	-fx-text-decoration-color: red;
+	-fx-text-decoration: underline;
+}

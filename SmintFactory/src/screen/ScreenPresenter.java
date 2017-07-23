@@ -3,6 +3,7 @@ package screen;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.ResourceBundle;
 
 import javax.inject.Inject;
@@ -16,22 +17,28 @@ import card.model.Card;
 import card.model.CardId;
 import card.model.CardMapper;
 import card.model.ParentCardId;
+import crowdfunder.CrowdfunderView;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import lotto.LottoView;
 import model.Model;
 import player1.Player1View;
 import player2.Player2View;
 import producer.ProducerView;
+import recycler.RecyclerView;
 import starter.StarterView;
 import supplier.SupplierView;
+import swap.SwapView;
+import temp.TempView;
+import wholesaler.WholesalerView;
 
 /**
  * Main screen presenter.
@@ -53,25 +60,32 @@ public class ScreenPresenter implements Initializable {
 	List<ParentCardId> handListPlayer2;
 	List<ParentCardId> buildingsListPlayer1;
 	List<ParentCardId> buildingsListPlayer2;
+	List<FXMLView> actionList;
+	
+	Random rn = new Random();
 	
 	@FXML
 	Button produceButton1, produceButton2, supplyButton1, supplyButton2, startButton, buildButton1, buildButton2;
 	
 	@FXML
-	HBox cardBox, playerBox1, playerBox2, plansBox1, plansBox2, buildingsBox1, buildingsBox2;
-
+	HBox cardBox, playerBox1, playerBox2;
 	
+	@FXML 
+	TextArea gameConsole;
+	
+	@FXML
+	HBox plansBox1, plansBox2, buildingsBox1, buildingsBox2;
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		
-		
+		gameConsole.textProperty().bind(model.gameConsoleText);
 		
 		boardList = new ArrayList<ParentCardId>();
 		handListPlayer1 = new ArrayList<ParentCardId>();
 		handListPlayer2 = new ArrayList<ParentCardId>();
 		buildingsListPlayer1 = new ArrayList<ParentCardId>();
 		buildingsListPlayer2 = new ArrayList<ParentCardId>();
+		actionList = new ArrayList<FXMLView>();
 		
 		//Player views
 		FXMLView player1 = new Player1View();
@@ -82,12 +96,39 @@ public class ScreenPresenter implements Initializable {
 		FXMLView builder = new BuilderView();
 		FXMLView supplier = new SupplierView();
 		FXMLView starter = new StarterView();
+		//Special action cards
+		FXMLView wholesaler = new WholesalerView();	
+		FXMLView crowdfunder = new CrowdfunderView();
+		FXMLView temp = new TempView();	
+		FXMLView swap = new SwapView();
+		FXMLView lotto = new LottoView();
+		FXMLView recycler = new RecyclerView();
 		
-		//Layout
+		actionList.add(wholesaler);
+		actionList.add(crowdfunder);
+		actionList.add(temp);
+		actionList.add(swap);
+		actionList.add(lotto);
+		actionList.add(recycler);
+		
+		//Layout standard
 		leftActionBox.getChildren().add(producer.getView());
 		leftActionBox.getChildren().add(starter.getView());
 		rightActionBox.getChildren().add(supplier.getView());
 		rightActionBox.getChildren().add(builder.getView());
+		
+		//Layout special cards
+		addSpecialCards(leftActionBox, rightActionBox);
+		
+		
+		
+//		leftActionBox.getChildren().add(wholesaler.getView());
+//		leftActionBox.getChildren().add(recycler.getView());
+//		leftActionBox.getChildren().add(swap.getView());
+//		rightActionBox.getChildren().add(crowdfunder.getView());
+//		rightActionBox.getChildren().add(lotto.getView());
+//		rightActionBox.getChildren().add(temp.getView());
+		
 		playerBox1.getChildren().add(player1.getView());
 		playerBox2.getChildren().add(player2.getView());
 		
@@ -101,8 +142,15 @@ public class ScreenPresenter implements Initializable {
 			}
 		});
 		
-		
-		
+		model.sevenPointsReached.addListener(new ChangeListener<Boolean>() {
+			@Override
+			public void changed(ObservableValue<? extends Boolean> arg0, Boolean arg1, Boolean arg2) {
+				// TODO Auto-generated method stub
+				//gameConsole.getStyleClass().add("endGame");
+				model.addGameConsoleText("The winner is "+ model.determineWinner().getPlayername() + " with " + model.determineWinner().getPoints().getValue() + " points");
+			}
+		});
+
 		plansChangeListener(true);
 		plansChangeListener(false);
 		buildingChangeListener(true);
@@ -113,6 +161,20 @@ public class ScreenPresenter implements Initializable {
 		addBuildBorderListener(false);
 
 		updateBoardUI(null);
+	}
+	
+	void addSpecialCards(VBox leftActionBox2, VBox rightActionBox2){
+		int random;
+		for(int i = 0; i<2; i++){
+			random = rn.nextInt(actionList.size());
+			rightActionBox2.getChildren().add(actionList.get(random).getView());
+			actionList.remove(random);
+		}
+		for(int i = 0; i<2; i++){
+			random = rn.nextInt(actionList.size());
+			leftActionBox2.getChildren().add(actionList.get(random).getView());
+			actionList.remove(random);
+		}
 	}
 	
 	void updateBoardUI(javafx.collections.ListChangeListener.Change<? extends Card> arg0) {
@@ -151,8 +213,7 @@ public class ScreenPresenter implements Initializable {
 		}
 	}
 	
-	
-	
+
 	HBox getBox(boolean isFirstPlayer, boolean isPlans, boolean isBuildings){
 		if(isFirstPlayer & isPlans){
 			return plansBox1;
@@ -187,7 +248,7 @@ public class ScreenPresenter implements Initializable {
 			// Voor elke kaart die toegevoegd is, voeg deze ook toe aan het scherm.
 			FXMLView cardview = new CardView();
 			((CardPresenter) cardview.getPresenter()).setCard(CardMapper.createCard(card.getCardId()));
-			Box.getChildren().add(cardview.getView());			
+			Box.getChildren().add(cardview.getView());
 			list.add(new ParentCardId(cardview.getView(), ((CardPresenter) cardview.getPresenter()).getCard().getCardId()));
 		}
 	}
@@ -221,28 +282,6 @@ public class ScreenPresenter implements Initializable {
 			}
 		});
 	}
-	
-//	void addBorder(boolean isPlayer1, boolean onBoard, boolean inHand){
-//		if(onBoard){
-//			List<ParentCardId> list = getBoardList();
-//			for(ParentCardId card:list){
-//				if(model.getSupplyButtonPressed().getValue()){
-//					card.getParent().getStyleClass().add("border");
-//				} else {
-//					card.getParent().getStyleClass().remove("border");
-//				}
-//			}
-//		} else if(inHand){
-//			List<ParentCardId> list = getList(isPlayer1, true, false);
-//			for(ParentCardId card:list){
-//				if(model.getBuildButtonPressed().getValue()){
-//					card.getParent().getStyleClass().add("border");
-//				} else {
-//					card.getParent().getStyleClass().remove("border");
-//				}
-//			}
-//		}
-//	}
 	
 	void addBorder(boolean isPlayer1, boolean onBoard, boolean inHand){
 		if(onBoard){
@@ -309,8 +348,7 @@ public class ScreenPresenter implements Initializable {
 	public void setBoardList(List<ParentCardId> boardList) {
 		this.boardList = boardList;
 	}
-	
-	
+
 	
 
 }

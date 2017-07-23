@@ -51,7 +51,7 @@ public class StarterPresenter implements Initializable {
 			((Button)event.getSource()).setDisable(true);
 			model.starter();
 		} else{
-			System.out.println("Need more money for " + ((Button)event.getSource()).getId());
+			model.addGameConsoleText("Need more money for " + ((Button)event.getSource()).getId());
 		}
   	
     }

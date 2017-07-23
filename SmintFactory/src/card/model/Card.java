@@ -1,19 +1,21 @@
 package card.model;
 
-public class Card {
+import javafx.scene.Parent;
 
+public class Card {
+	
 	String name;
 	Integer extraMoney;
 	Integer stars;
 	Integer cost;
-	Type type;
+	String type;
 	CardId cardId;
 	
 	public Card() {
 		// 
 	}
 	
-	public Card(String name, Integer extraMoney, Integer stars, Integer cost, Type type, CardId cardId) {
+	public Card(String name, Integer extraMoney, Integer stars, Integer cost, String type, CardId cardId) {
 		this.name = name;
 		this.extraMoney = extraMoney;
 		this.stars = stars;
@@ -57,10 +59,10 @@ public class Card {
 	public void setCost(Integer cost) {
 		this.cost = cost;
 	}
-	public Type getType() {
+	public String getType() {
 		return type;
 	}
-	public void setType(Type type) {
+	public void setType(String type) {
 		this.type = type;
 	}
 	public CardId getCardId() {
@@ -69,4 +71,5 @@ public class Card {
 	public void setCardId(CardId cardId) {
 		this.cardId = cardId;
 	}
+
 }

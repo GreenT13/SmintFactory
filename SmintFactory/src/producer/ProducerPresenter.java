@@ -22,6 +22,8 @@ public class ProducerPresenter implements Initializable {
 	Model model;
 	
 	@FXML Button produceButton1, produceButton2;
+	
+	
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -32,7 +34,6 @@ public class ProducerPresenter implements Initializable {
 			@Override
 			public void changed(ObservableValue<? extends Boolean> arg0, Boolean arg1, Boolean arg2) {
 				// TODO Auto-generated method stub
-				System.out.println("gaat dit goed");
 				produceButton1.setDisable(false);
 				produceButton2.setDisable(false);
 
@@ -49,7 +50,7 @@ public class ProducerPresenter implements Initializable {
 	    	((Button)event.getSource()).setDisable(true);
 	    	model.produce();
 		} else {
-			System.out.println("Need more money for" + ((Button)event.getSource()).getId());
+			model.addGameConsoleText("Need more money for" + ((Button)event.getSource()).getId());
 		}
     }
 	

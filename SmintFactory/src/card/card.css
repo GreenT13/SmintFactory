@@ -1,15 +1,17 @@
-#paneGreen {
-	-fx-background-color: green;
-}
-#paneRed {
-	-fx-background-color: red;
-}
-#paneYellow {
-	-fx-background-color: yellow;
-}
+.pane {
+	-fx-border-color: black;
+	-fx-border-style: solid;
+	-fx-border-width: 1px;
+	}
 
 .border {
 	-fx-border-color: black;
+	-fx-border-style: solid;
+    -fx-border-width: 3px;
+}
+
+.pickBorder {
+	-fx-border-color: gold;
 	-fx-border-style: solid;
     -fx-border-width: 5px;
 }

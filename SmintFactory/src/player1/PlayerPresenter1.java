@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import model.Model;
 
@@ -28,6 +29,7 @@ public class PlayerPresenter1 implements Initializable {
 	Pane playerPane1;
 	
 	@FXML Button passButton1;
+	@FXML TextField gameConsole;
 	
 	// Automatically use the same model for each .fxml using inject (also instantiates automatically).
 	@Inject

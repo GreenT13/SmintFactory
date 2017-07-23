@@ -11,21 +11,39 @@ public class CardMapper {
 	
 	public static List<Card> cardProperties;
 	
+	//this.name = name;
+//	this.extraMoney = extraMoney;
+//	this.stars = stars;
+//	this.cost = cost;
+//	this.type = type;
+//	this.cardId = cardId;
+//	
 	static {
 		cardProperties = new ArrayList<Card>();
 		// Define all cards with properties here.
-		cardProperties.add(new Card("Simpel rood", 1, 0, 1, Type.RED, CardId.SIMPLE_RED));
-		cardProperties.add(new Card("Simpel groen", 0, 1, 1, Type.GREEN, CardId.SIMPLE_GREEN));
-		cardProperties.add(new Card("Simpel geel", 1, 1, 1, Type.YELLOW, CardId.SIMPLE_YELLOW));
-		cardProperties.add(new Card("Speciaal2", 2, 2, 2, Type.RED, CardId.SPECIAL));
-		cardProperties.add(new Card("Simpel rood2", 1, 0, 1, Type.RED, CardId.SIMPLE_RED));
-		cardProperties.add(new Card("Simpel groen2", 0, 1, 1, Type.GREEN, CardId.SIMPLE_GREEN));
-		cardProperties.add(new Card("Simpel geel2", 1, 1, 1, Type.YELLOW, CardId.SIMPLE_YELLOW));
-		cardProperties.add(new Card("Speciaal2", 2, 2, 2, Type.RED, CardId.SPECIAL));
-		cardProperties.add(new Card("Simpel rood3", 1, 0, 1, Type.RED, CardId.SIMPLE_RED));
-		cardProperties.add(new Card("Simpel groen3", 0, 1, 1, Type.GREEN, CardId.SIMPLE_GREEN));
-		cardProperties.add(new Card("Simpel geel3", 1, 1, 1, Type.YELLOW, CardId.SIMPLE_YELLOW));
-		cardProperties.add(new Card("Speciaal3", 2, 2, 2, Type.RED, CardId.SPECIAL));
+		cardProperties.add(new Card("Corporate HQ", 1, 0, 3, "red", CardId.CORPORATE_HQ));
+		cardProperties.add(new Card("Stripmine", 3, 0, 4, "red", CardId.STRIPMINE));
+		cardProperties.add(new Card("Lotto", 0, 2, 4, "aquamarine", CardId.GALLERY));
+		cardProperties.add(new Card("Mine", 1, 1, 2, "red", CardId.MINE));
+		cardProperties.add(new Card("Assembler", 0, 1, 5, "yellow", CardId.ASSEMBLER));
+		cardProperties.add(new Card("Workshop", 1, 2, 3, "red", CardId.WORKSHOP));
+		cardProperties.add(new Card("Windmill", 0, 1, 1, "green", CardId.WINDMILL));
+		cardProperties.add(new Card("Corporate HQ", 1, 0, 3, "red", CardId.CORPORATE_HQ));
+		cardProperties.add(new Card("Bridge", 0, 0, 1, "green", CardId.BRIDGE));
+		cardProperties.add(new Card("Factory", 1, 3, 4, "red", CardId.FACTORY));
+		cardProperties.add(new Card("Co-op", 1, 1, 1, "red", CardId.COOP));
+		cardProperties.add(new Card("Plant", 2, 2, 5, "red", CardId.PLANT));
+		cardProperties.add(new Card("Gallery", 0, 1, 4, "green", CardId.GALLERY));
+		cardProperties.add(new Card("Gardens", 0, 3, 3, "green", CardId.GARDENS));
+		cardProperties.add(new Card("Statue", 0, 2, 2, "green", CardId.STATUE));
+		cardProperties.add(new Card("Wholesaler", 0, 1, 1, "aquamarine", CardId.WHOLESALER));
+		cardProperties.add(new Card("Vault", 0, 2, 5, "yellow", CardId.VAULT));
+		cardProperties.add(new Card("Obelisk", 0, 1, 4, "yellow", CardId.OBELISK));
+		cardProperties.add(new Card("Museum", 0, 1, 2, "green", CardId.MUSEUM));
+		cardProperties.add(new Card("Truck", 0, 1, 2, "yellow", CardId.TRUCK));
+		cardProperties.add(new Card("Crane", 0, 1, 2, "yellow", CardId.CRANE));
+		cardProperties.add(new Card("Landfill", 0, 3, 3, "yellow", CardId.LANDFILL));		
+		
 	}
 
 	/**
