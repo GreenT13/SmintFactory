@@ -10,14 +10,13 @@ import javax.inject.Inject;
 
 import com.airhacks.afterburner.views.FXMLView;
 
-import builder.BuilderView;
+
 import card.CardPresenter;
 import card.CardView;
 import card.model.Card;
 import card.model.CardId;
 import card.model.CardMapper;
 import card.model.ParentCardId;
-import crowdfunder.CrowdfunderView;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
@@ -28,17 +27,19 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import lotto.LottoView;
 import model.Model;
 import player1.Player1View;
 import player2.Player2View;
-import producer.ProducerView;
-import recycler.RecyclerView;
-import starter.StarterView;
-import supplier.SupplierView;
-import swap.SwapView;
-import temp.TempView;
-import wholesaler.WholesalerView;
+import actioncards.RecyclerView;
+import actioncards.StarterView;
+import actioncards.SupplierView;
+import actioncards.SwapView;
+import actioncards.TempView;
+import actioncards.WholesalerView;
+import actioncards.BuilderView;
+import actioncards.CrowdfunderView;
+import actioncards.LottoView;
+import actioncards.ProducerView;
 
 /**
  * Main screen presenter.
@@ -119,15 +120,6 @@ public class ScreenPresenter implements Initializable {
 		
 		//Layout special cards
 		addSpecialCards(leftActionBox, rightActionBox);
-		
-		
-		
-//		leftActionBox.getChildren().add(wholesaler.getView());
-//		leftActionBox.getChildren().add(recycler.getView());
-//		leftActionBox.getChildren().add(swap.getView());
-//		rightActionBox.getChildren().add(crowdfunder.getView());
-//		rightActionBox.getChildren().add(lotto.getView());
-//		rightActionBox.getChildren().add(temp.getView());
 		
 		playerBox1.getChildren().add(player1.getView());
 		playerBox2.getChildren().add(player2.getView());
