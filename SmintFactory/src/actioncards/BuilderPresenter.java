@@ -40,7 +40,6 @@ public class BuilderPresenter implements Initializable {
 				buildButton2.setDisable(false);
 				model.newRound.setValue(false);
 			}
-			
 		});
 		
 		GetHandListener(true);
@@ -72,27 +71,17 @@ public class BuilderPresenter implements Initializable {
 			if(((Button)event.getSource()).getText()!="X"){
 				if(model.getCurrentPlayer().getMoney().getValue()>1){
 					((Button)event.getSource()).setText("X");
-					model.buildButtonPressed.set(true);
+					model.builder(true);
 				} else {
 					model.addGameConsoleText("Need more money");
 				}		
 			} else{
 				((Button)event.getSource()).setText("2");
-				model.buildButtonPressed.set(false);
+				model.builder(false);
 			}
 		} else {
 			model.addGameConsoleText("No cards in your hand");
 		}
-		
-		
-		
-//		if(model.getCurrentPlayer().getMoney().getValue()>1){
-//			((Button)event.getSource()).setDisable(true);
-//			model.builder();
-//		} else{
-//			System.out.println("Need more money for " + ((Button)event.getSource()).getId());
-//		}
-		
     }
 	
 	void disableButton(Button button){

@@ -28,8 +28,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import model.Model;
-import player1.Player1View;
-import player2.Player2View;
+import players.Player1View;
+import players.Player2View;
 import actioncards.RecyclerView;
 import actioncards.StarterView;
 import actioncards.SupplierView;
@@ -151,7 +151,7 @@ public class ScreenPresenter implements Initializable {
 		addSupplyBorderListener(false);
 		addBuildBorderListener(true);
 		addBuildBorderListener(false);
-
+		
 		updateBoardUI(null);
 	}
 	

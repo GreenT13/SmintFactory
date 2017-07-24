@@ -21,10 +21,23 @@ public class LottoPresenter implements Initializable {
 	// Automatically use the same model for each .fxml using inject (also instantiates automatically).
 	@Inject
 	Model model;
+	
+	@FXML Button lottoButton1;
+
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		
+		lottoButton1.setDisable(true);
+
+		model.lottoBought.addListener(new ChangeListener<Boolean>(){
+			@Override
+			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+				if(model.lottoBought.getValue()){
+					lottoButton1.setDisable(false);
+				}
+			}
+			
+		});
 	}
 	
 	@FXML

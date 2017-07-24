@@ -1,4 +1,4 @@
-package player1;
+package players;
 
 import java.net.URL;
 import java.util.ResourceBundle;

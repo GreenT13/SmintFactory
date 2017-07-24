@@ -1,4 +1,4 @@
-package player1;
+package players;
 
 import com.airhacks.afterburner.views.FXMLView;
 

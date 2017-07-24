@@ -22,8 +22,6 @@ public class ProducerPresenter implements Initializable {
 	Model model;
 	
 	@FXML Button produceButton1, produceButton2;
-	
-	
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {

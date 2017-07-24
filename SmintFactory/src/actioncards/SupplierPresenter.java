@@ -64,13 +64,12 @@ public class SupplierPresenter implements Initializable {
 	
 	@FXML
     private void actionSupply(ActionEvent event){
-		System.out.println(model.getCurrentPlayer().getHand());
 		if (((Button)event.getSource()).getText()==""){
 			((Button)event.getSource()).setText("X");
-			model.supplyButtonPressed.set(true);
+			model.supplier(true);
 		} else{
 			((Button)event.getSource()).setText("");
-			model.supplyButtonPressed.set(false);
+			model.supplier(false);
 		}	
     }
 	

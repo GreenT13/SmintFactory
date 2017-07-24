@@ -1,17 +1,23 @@
 package model;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import card.model.Card;
 import card.model.CardId;
 import card.model.CardMapper;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+
 
 /**
  * Class that contains all the data used in the program.
  */
 public class Model {
+
 	
 	// Our model will only contain a String and a Boolean.
 	SimpleBooleanProperty isPlayer1CurrentPlayer;
@@ -21,8 +27,11 @@ public class Model {
 	public SimpleBooleanProperty newRound;
 	public SimpleBooleanProperty supplyButtonPressed;
 	public SimpleBooleanProperty buildButtonPressed;
+	public SimpleBooleanProperty recycleButtonPressed;
 	public SimpleBooleanProperty sevenPointsReached;
 	public SimpleStringProperty gameConsoleText;
+	public SimpleBooleanProperty lottoBought;
+	public SimpleBooleanProperty wholesalerBought;
 	
 	boolean hasPreviousPlayerPassed;
 	Player player1, player2;
@@ -42,7 +51,10 @@ public class Model {
 		newRound = new SimpleBooleanProperty(false);
 		supplyButtonPressed = new SimpleBooleanProperty(false);
 		buildButtonPressed = new SimpleBooleanProperty(false);
+		recycleButtonPressed = new SimpleBooleanProperty(false);
 		sevenPointsReached = new SimpleBooleanProperty(false);
+		lottoBought = new SimpleBooleanProperty(false);
+		wholesalerBought = new SimpleBooleanProperty(false);
 		
 		nobody = new Player();
 		nobody.setPlayername("Nobody");
@@ -65,43 +77,38 @@ public class Model {
 		gameConsoleText.setValue(text + System.lineSeparator() + gameConsoleText.getValue());
 	}
 	
-	public void clickCard(CardId cardId, boolean isInHand, boolean isBuilt, boolean moneyCheck) {
-			if (isBuilt){
-				// Is gebouwd, doet niks
-			} 
-			else if(isInHand) {
-				if(buildButtonPressed.getValue() & moneyCheck){
-					// van hand -> gebouwd
-					// System.out.println("Bouw mij!");
-					if(getCurrentPlayer().getHand().contains(CardMapper.createCard(cardId))){
-						getCurrentPlayer().hand.remove(CardMapper.createCard(cardId));
-						getCurrentPlayer().buildings.add(CardMapper.createCard(cardId));
-						buildButtonPressed.setValue(false);
-						getCurrentPlayer().money.setValue(getCurrentPlayer().money.getValue()-2);
-						changeTurn();
-					} else {
-						//
-					}
-				} else if (buildButtonPressed.getValue()){
-					addGameConsoleText("Not enough money to buy this card.");
-				} else if (!moneyCheck(getCurrentPlayer().money.getValue(), 2)){
-					addGameConsoleText("Press the supply button before attempting to buy a card.");
-				}
-			} else {
-				// van bord -> hand
-				if(moneyCheck & supplyButtonPressed.getValue() & !isInHand & !isBuilt){
-					board.remove(CardMapper.createCard(cardId));
-					getCurrentPlayer().hand.add(CardMapper.createCard(cardId));
-					supplyButtonPressed.setValue(false);
-					getCurrentPlayer().money.setValue((getCurrentPlayer().money.getValue() - CardMapper.createCard(cardId).getCost()));
-					changeTurn();
-				} else if (supplyButtonPressed.getValue()){
-					addGameConsoleText("Not enough money to build this card.");
-				} else {
-					addGameConsoleText("Press the buy button before attempting to build.");
-				}
-				
-			}
+	public void recycleCard(CardId cardId){
+		if(getCurrentPlayer().getHand().contains(CardMapper.createCard(cardId))){
+			getCurrentPlayer().getHand().remove(CardMapper.createCard(cardId));
+			getCurrentPlayer().money.set(getCurrentPlayer().getMoney().getValue() + CardMapper.createCard(cardId).getStars() + CardMapper.createCard(cardId).getCost());
+			changeTurn();
+		} else {
+			addGameConsoleText("Pick a plan from your hand");
+		}
+	}
+	
+	public void buildCard(CardId cardId){
+		if(getCurrentPlayer().getHand().contains(CardMapper.createCard(cardId))){
+			getCurrentPlayer().getHand().remove(CardMapper.createCard(cardId));
+			getCurrentPlayer().buildings.add(CardMapper.createCard(cardId));
+			getCurrentPlayer().money.setValue((getCurrentPlayer().money.getValue() - 2));
+			buildButtonPressed.setValue(false);
+			changeTurn();
+		} else {
+			addGameConsoleText("That card is not in your hand");
+		}
+	}
+	
+	public void buyCard(CardId cardId){
+		if(board.contains(CardMapper.createCard(cardId))){
+			board.remove(CardMapper.createCard(cardId));
+			getCurrentPlayer().hand.add(CardMapper.createCard(cardId));
+			getCurrentPlayer().money.setValue((getCurrentPlayer().money.getValue() - CardMapper.createCard(cardId).getCost()));
+			supplyButtonPressed.setValue(false);
+			changeTurn();
+		} else {
+			addGameConsoleText("That card is not on the board");
+		}
 	}
 	
 	void updatePlayerProperties(boolean isPlayer1){
@@ -125,6 +132,10 @@ public class Model {
 	
 	public Player getCurrentPlayer(){
 		return getPlayer(isPlayer1CurrentPlayer.getValue());
+	}
+	
+	public Player getOtherPlayer(){
+		return getPlayer(!isPlayer1CurrentPlayer.getValue());
 	}
 	
 	public void changeTurn(){
@@ -238,13 +249,21 @@ public class Model {
 	}
 	
 	public void builder(boolean buttonUsed){
-		//getCurrentPlayer().playerCanBuild=buttonUsed;
-		//changeTurn();
+		buildButtonPressed.set(buttonUsed);
 	}
 	
 	public void supplier(boolean buttonUsed){
-//		getCurrentPlayer().playerCanBuy=buttonUsed;
-		//changeTurn();
+		supplyButtonPressed.set(buttonUsed);
+	}
+	
+	public void crowdfund(){
+		getCurrentPlayer().money.setValue(getCurrentPlayer().money.getValue()+2);
+		getOtherPlayer().money.setValue(getOtherPlayer().money.getValue()+1);
+		changeTurn();
+	}
+	
+	public void recycler(boolean buttonUsed){
+		recycleButtonPressed.set(buttonUsed);
 	}
 	
 	/* All getters and setters */
@@ -296,6 +315,8 @@ public class Model {
 	public void setBuildButtonPressed(SimpleBooleanProperty buildButtonPressed) {
 		this.buildButtonPressed = buildButtonPressed;
 	}
+
+	
 
 	
 }

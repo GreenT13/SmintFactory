@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import card.model.Card;
 import card.model.CardMapper;
 import card.model.Type;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -89,35 +90,39 @@ public class CardPresenter implements Initializable {
 	}
 
 	public void actionTake(MouseEvent event){
-		if (((Pane) event.getSource()).getParent().getId().contains("cardBox")) {
-			// van cardBox --> plansBox
-			model.clickCard(card.getCardId(), false, false, model.moneyCheck(model.getCurrentPlayer().getMoney().getValue(), CardMapper.createCard(card.getCardId()).getCost()));
-		} else if(((Pane) event.getSource()).getParent().getId().contains("plansBox")){
-			// van plansBox --> buildingsBox
-			model.clickCard(card.getCardId(), true, false, model.moneyCheck(model.getCurrentPlayer().getMoney().getValue(), 2));
+		if(model.recycleButtonPressed.getValue()){
+			model.recycleCard(card.getCardId());
+		} else if (model.supplyButtonPressed.getValue()){
+			if (model.moneyCheck(model.getCurrentPlayer().getMoney().getValue(), CardMapper.createCard(card.getCardId()).getCost())){
+				model.buyCard(card.getCardId());
+			} else{
+				model.addGameConsoleText("You don't have enough money to buy this card");
+			}
+		} else if(model.buildButtonPressed.getValue()){
+			if (model.moneyCheck(model.getCurrentPlayer().getMoney().getValue(), 2)){
+				model.buildCard(card.getCardId());
+			} else{
+				model.addGameConsoleText("You don't have enough money to build this card");
+			}
 		} else {
-			// true, true voert niks uit
-			model.clickCard(card.getCardId(), true, true, true);
+			model.addGameConsoleText("Press button first");
 		}
 
 	}
 	
-	public void toFrontCard(MouseEvent event){
-		if(model.supplyButtonPressed.getValue()==true & ((Pane)event.getSource()).getParent().getId().contains("cardBox")){
-			((Pane)event.getSource()).getStyleClass().add("pickBorder");
-		}
-		if (model.buildButtonPressed.getValue()==true & ((Pane)event.getSource()).getParent().getId().contains("plansBox")){
-			((Pane)event.getSource()).getStyleClass().add("pickBorder");
-		}
-		
-		
+	public void toFrontCard(MouseEvent event){		
+		addBorder(model.supplyButtonPressed.getValue(), ((Pane)event.getSource()), "cardBox");
+		addBorder(model.buildButtonPressed.getValue(), ((Pane)event.getSource()), "plansBox");
+		addBorder(model.recycleButtonPressed.getValue(), ((Pane)event.getSource()), "plansBox");
 	}
 	
 	public void toBackCard(MouseEvent event){
 		((Pane)event.getSource()).getStyleClass().remove("pickBorder");
-//		if(((Pane)event.getSource()).getParent().getId().contains("plansBox")){
-//			System.out.println("2222as");
-//
-//		}
+	}
+	
+	void addBorder(boolean buttonUsed, Pane source, String boxName){
+		if (buttonUsed == true & source.getParent().getId().contains(boxName)){
+			source.getStyleClass().add("pickBorder");
+		}
 	}
 }
