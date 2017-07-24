@@ -106,6 +106,13 @@ public class Model {
 	}
 	
 	public void buyCard(CardId cardId){
+		if(getCurrentPlayer().getBuildings().contains(CardMapper.createCard(CardId.ASSEMBLER))){
+			board.remove(CardMapper.createCard(cardId));
+			getCurrentPlayer().buildings.add(CardMapper.createCard(cardId));
+			getCurrentPlayer().money.setValue((getCurrentPlayer().money.getValue() - CardMapper.createCard(cardId).getCost()));
+			supplyButtonPressed.setValue(false);
+			changeTurn();
+		}
 		if(board.contains(CardMapper.createCard(cardId))){
 			board.remove(CardMapper.createCard(cardId));
 			getCurrentPlayer().hand.add(CardMapper.createCard(cardId));

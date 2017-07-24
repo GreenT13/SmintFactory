@@ -55,7 +55,7 @@ public class RecyclerPresenter implements Initializable {
 	
 	@FXML
     private void actionRecycle(ActionEvent event){
-		if(model.getCurrentPlayer().getHand().size() > 0){
+		if(model.getCurrentPlayer().getHand().size() > 0 | model.getCurrentPlayer().getBuildings().size() > 0){
 			if(((Button)event.getSource()).getText()!="X"){
 				if(model.getCurrentPlayer().getMoney().getValue()>0){
 					((Button)event.getSource()).setText("X");
