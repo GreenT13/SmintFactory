@@ -5,12 +5,17 @@ import java.util.ResourceBundle;
 
 import javax.inject.Inject;
 
+import card.model.Card;
+import card.model.CardId;
+import card.model.CardMapper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.layout.VBox;
 import model.Model;
 
 /**
@@ -21,26 +26,59 @@ public class WholesalerPresenter implements Initializable {
 	@Inject
 	Model model;
 	
-	@FXML Button wholesaleButton1, wholesaleButton2;
-	
+	@FXML Button wholesaleButton1;
+	@FXML VBox leftActionBox, rightActionBox;
 	
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		// Bind model.labelText to the label.
-		// Whenever the labelText changes, the label will change its value as well.
+		wholesaleButton1.setDisable(true);
 		
 		model.getNewRound().addListener(new ChangeListener<Boolean>(){
 			@Override
 			public void changed(ObservableValue<? extends Boolean> arg0, Boolean arg1, Boolean arg2) {
 				// TODO Auto-generated method stub
-				wholesaleButton1.setDisable(false);
-				wholesaleButton2.setDisable(false);
+				if(model.wholesalerBought.getValue()==true){
+					wholesaleButton1.setDisable(false);
+				}			
+					model.newRound.setValue(false);	
+			}
+		});
 
-				model.newRound.setValue(false);
+		model.getPlayer(true).getBuildings().addListener(new ListChangeListener<Card>(){
+			@Override
+			public void onChanged(javafx.collections.ListChangeListener.Change<? extends Card> c) {
+				// TODO Auto-generated method stub
+				if(model.getPlayer(true).getBuildings().contains(CardMapper.createCard(CardId.WHOLESALER))){
+					model.wholesalerBought.setValue(true);
+				}
 			}
 			
 		});
+		
+		model.getPlayer(false).getBuildings().addListener(new ListChangeListener<Card>(){
+			@Override
+			public void onChanged(javafx.collections.ListChangeListener.Change<? extends Card> c) {
+				// TODO Auto-generated method stub
+				if(model.getPlayer(false).getBuildings().contains(CardMapper.createCard(CardId.WHOLESALER))){
+					model.wholesalerBought.setValue(true);
+				}
+			}
+			
+		});
+		
+		model.wholesalerBought.addListener(new ChangeListener<Boolean>(){
+			@Override
+			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+				if(model.wholesalerBought.getValue()){
+					wholesaleButton1.setDisable(false);
+				} else{
+					wholesaleButton1.setDisable(true);
+				}
+			}
+			
+		});
+	
 		
 	}
 	

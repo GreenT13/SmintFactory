@@ -114,6 +114,7 @@ public class CardPresenter implements Initializable {
 		addBorder(model.supplyButtonPressed.getValue(), ((Pane)event.getSource()), "cardBox");
 		addBorder(model.buildButtonPressed.getValue(), ((Pane)event.getSource()), "plansBox");
 		addBorder(model.recycleButtonPressed.getValue(), ((Pane)event.getSource()), "plansBox");
+		addBorder(model.recycleButtonPressed.getValue(), ((Pane)event.getSource()), "buildingsBox");
 	}
 	
 	public void toBackCard(MouseEvent event){

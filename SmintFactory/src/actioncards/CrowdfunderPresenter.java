@@ -11,7 +11,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
 import model.Model;
 
 /**
@@ -22,21 +22,13 @@ public class CrowdfunderPresenter implements Initializable {
 	@Inject
 	Model model;
 	
-	@FXML Button crowdfundButton1, crowdfundButton2;
+	@FXML Button crowdfundButton1;
+	@FXML VBox leftActionBox, rightActionBox;
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		model.getNewRound().addListener(new ChangeListener<Boolean>(){
-			@Override
-			public void changed(ObservableValue<? extends Boolean> arg0, Boolean arg1, Boolean arg2) {
-				// TODO Auto-generated method stub
-				crowdfundButton1.setDisable(false);
-				crowdfundButton2.setDisable(false);
-
-				model.newRound.setValue(false);
-			}
-			
-		});
+		
+		model.newRoundListener(crowdfundButton1);
 	}
 	
 	@FXML

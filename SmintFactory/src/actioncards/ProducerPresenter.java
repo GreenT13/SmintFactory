@@ -28,17 +28,8 @@ public class ProducerPresenter implements Initializable {
 		// Bind model.labelText to the label.
 		// Whenever the labelText changes, the label will change its value as well.
 		
-		model.getNewRound().addListener(new ChangeListener<Boolean>(){
-			@Override
-			public void changed(ObservableValue<? extends Boolean> arg0, Boolean arg1, Boolean arg2) {
-				// TODO Auto-generated method stub
-				produceButton1.setDisable(false);
-				produceButton2.setDisable(false);
-
-				model.newRound.setValue(false);
-			}
-			
-		});
+		model.newRoundListener(produceButton1);
+		model.newRoundListener(produceButton2);
 		
 	}
 	

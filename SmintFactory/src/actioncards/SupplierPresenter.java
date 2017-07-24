@@ -31,16 +31,8 @@ public class SupplierPresenter implements Initializable {
 		// Bind model.labelText to the label.
 		// Whenever the labelText changes, the label will change its value as well.
 		
-		model.getNewRound().addListener(new ChangeListener<Boolean>(){
-			@Override
-			public void changed(ObservableValue<? extends Boolean> arg0, Boolean arg1, Boolean arg2) {
-				// TODO Auto-generated method stub
-				supplyButton1.setDisable(false);
-				supplyButton2.setDisable(false);
-				model.newRound.setValue(false);
-			}
-			
-		});
+		model.newRoundListener(supplyButton1);
+		model.newRoundListener(supplyButton2);
 		
 		GetHandListener();
 

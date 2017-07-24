@@ -14,6 +14,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
 import model.Model;
 
 /**
@@ -27,17 +28,12 @@ public class RecyclerPresenter implements Initializable {
 	boolean buttonUsed=false;
 	
 	@FXML Button recycleButton1;
+	@FXML VBox leftActionBox, rightActionBox;
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		model.getNewRound().addListener(new ChangeListener<Boolean>(){
-			@Override
-			public void changed(ObservableValue<? extends Boolean> arg0, Boolean arg1, Boolean arg2) {
-				// TODO Auto-generated method stub
-				recycleButton1.setDisable(false);
-				model.newRound.setValue(false);
-			}
-		});
+		
+		model.newRoundListener(recycleButton1);
 		
 		GetHandListener(true);
 		GetHandListener(false);
@@ -54,6 +50,7 @@ public class RecyclerPresenter implements Initializable {
 			}
 			
 		});
+		//}
 	}
 	
 	@FXML

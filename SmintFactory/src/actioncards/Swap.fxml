@@ -7,7 +7,7 @@
 
 <Pane id="" fx:id="" fx:controller="actioncards.SwapPresenter" style="-fx-background-color:white;" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="123.0" prefWidth="274.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Button id="" fx:id="" layoutX="14.0" layoutY="46.5" mnemonicParsing="false" onAction="#actionSwap" prefHeight="29.0" prefWidth="34.0" text="1" />
+      <Button id="swapButton1" fx:id="swapButton1" layoutX="14.0" layoutY="46.5" mnemonicParsing="false" onAction="#actionSwap" prefHeight="29.0" prefWidth="34.0" text="1" />
       <TextField alignment="CENTER" editable="false" layoutX="63.0" layoutY="46.0" prefHeight="55.0" prefWidth="195.0" text="Swap plan bla" />
       <TextField alignment="CENTER" editable="false" layoutX="63.0" layoutY="25.0" prefHeight="25.0" prefWidth="195.0" text="Swap Meet">
          <font>

@@ -22,8 +22,6 @@ public class BuilderPresenter implements Initializable {
 	// Automatically use the same model for each .fxml using inject (also instantiates automatically).
 	@Inject
 	Model model;
-
-	boolean buttonUsed=false;
 	
 	@FXML Button buildButton1, buildButton2;
 	
@@ -32,18 +30,22 @@ public class BuilderPresenter implements Initializable {
 		// Bind model.labelText to the label.
 		// Whenever the labelText changes, the label will change its value as well.
 		
-		model.getNewRound().addListener(new ChangeListener<Boolean>(){
-			@Override
-			public void changed(ObservableValue<? extends Boolean> arg0, Boolean arg1, Boolean arg2) {
-				// TODO Auto-generated method stub
-				buildButton1.setDisable(false);
-				buildButton2.setDisable(false);
-				model.newRound.setValue(false);
-			}
-		});
+		model.newRoundListener(buildButton1);
+		model.newRoundListener(buildButton2);
 		
 		GetHandListener(true);
 		GetHandListener(false);
+		
+		model.getNewRound().addListener(new ChangeListener<Boolean>(){
+
+			@Override
+			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+				// TODO Auto-generated method stub
+				buildButton1.setText("2");
+				buildButton2.setText("2");
+			}
+			
+		});
 		
 		model.getIsPlayer1CurrentPlayer().addListener(new ChangeListener<Boolean>(){
 

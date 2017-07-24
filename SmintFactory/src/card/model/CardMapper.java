@@ -22,8 +22,8 @@ public class CardMapper {
 		cardProperties = new ArrayList<Card>();
 		// Define all cards with properties here.
 		cardProperties.add(new Card("Corporate HQ", 1, 0, 3, "red", CardId.CORPORATE_HQ));
-		cardProperties.add(new Card("Stripmine", 3, 0, 4, "red", CardId.STRIPMINE));
-		cardProperties.add(new Card("Lotto", 0, 2, 4, "aquamarine", CardId.GALLERY));
+		cardProperties.add(new Card("Wholesaler", 0, 1, 1, "aquamarine", CardId.WHOLESALER));
+		cardProperties.add(new Card("Lotto", 0, 2, 4, "aquamarine", CardId.LOTTO));
 		cardProperties.add(new Card("Mine", 1, 1, 2, "red", CardId.MINE));
 		cardProperties.add(new Card("Assembler", 0, 1, 5, "yellow", CardId.ASSEMBLER));
 		cardProperties.add(new Card("Workshop", 1, 2, 3, "red", CardId.WORKSHOP));
@@ -36,7 +36,7 @@ public class CardMapper {
 		cardProperties.add(new Card("Gallery", 0, 1, 4, "green", CardId.GALLERY));
 		cardProperties.add(new Card("Gardens", 0, 3, 3, "green", CardId.GARDENS));
 		cardProperties.add(new Card("Statue", 0, 2, 2, "green", CardId.STATUE));
-		cardProperties.add(new Card("Wholesaler", 0, 1, 1, "aquamarine", CardId.WHOLESALER));
+		cardProperties.add(new Card("Stripmine", 3, 0, 4, "red", CardId.STRIPMINE));
 		cardProperties.add(new Card("Vault", 0, 2, 5, "yellow", CardId.VAULT));
 		cardProperties.add(new Card("Obelisk", 0, 1, 4, "yellow", CardId.OBELISK));
 		cardProperties.add(new Card("Museum", 0, 1, 2, "green", CardId.MUSEUM));

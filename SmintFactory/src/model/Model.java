@@ -1,16 +1,17 @@
 package model;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
 import card.model.Card;
 import card.model.CardId;
 import card.model.CardMapper;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.layout.VBox;
 
 
 /**
@@ -18,6 +19,7 @@ import javafx.collections.ObservableList;
  */
 public class Model {
 
+	@FXML VBox leftActionBox, rightActionBox;
 	
 	// Our model will only contain a String and a Boolean.
 	SimpleBooleanProperty isPlayer1CurrentPlayer;
@@ -82,6 +84,10 @@ public class Model {
 			getCurrentPlayer().getHand().remove(CardMapper.createCard(cardId));
 			getCurrentPlayer().money.set(getCurrentPlayer().getMoney().getValue() + CardMapper.createCard(cardId).getStars() + CardMapper.createCard(cardId).getCost());
 			changeTurn();
+		} else if(getCurrentPlayer().getBuildings().contains(CardMapper.createCard(cardId))) {
+			getCurrentPlayer().getBuildings().remove(CardMapper.createCard(cardId));
+			getCurrentPlayer().money.set(getCurrentPlayer().getMoney().getValue() + CardMapper.createCard(cardId).getStars() + CardMapper.createCard(cardId).getCost());
+			changeTurn();
 		} else {
 			addGameConsoleText("Pick a plan from your hand");
 		}
@@ -110,6 +116,38 @@ public class Model {
 			addGameConsoleText("That card is not on the board");
 		}
 	}
+		
+	boolean checkActionCards(Button button){
+		if(getPlayer(true).getBuildings().contains(button)){
+			 return true;
+		 } else if(getPlayer(false).getBuildings().contains(button)){
+			 return true;
+		 } else {
+			 return false;
+		 }
+	}
+	
+	void checkLottoBought(){
+		if(getPlayer(true).getBuildings().contains(CardMapper.createCard(CardId.LOTTO))){
+			lottoBought.set(true);
+		}
+		if(getPlayer(false).getBuildings().contains(CardMapper.createCard(CardId.LOTTO))){
+			lottoBought.set(true);
+		}
+	}
+	
+	void checkWholesalerBought(){
+		if(getPlayer(true).getBuildings().contains(CardMapper.createCard(CardId.WHOLESALER))){
+			wholesalerBought.set(true);
+		}
+		if(getPlayer(false).getBuildings().contains(CardMapper.createCard(CardId.WHOLESALER))){
+			wholesalerBought.set(true);
+		}
+	}
+	
+
+	
+	
 	
 	void updatePlayerProperties(boolean isPlayer1){
 		int totalIncome=1, totalPoints=0;
@@ -264,6 +302,28 @@ public class Model {
 	
 	public void recycler(boolean buttonUsed){
 		recycleButtonPressed.set(buttonUsed);
+	}
+	
+	public boolean checkButton(Button button){
+		if(leftActionBox.getChildren().contains(button)){
+			return true;
+		} else if (rightActionBox.getChildren().contains(button)){
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public void newRoundListener(Button button){
+		getNewRound().addListener(new ChangeListener<Boolean>(){
+			@Override
+			public void changed(ObservableValue<? extends Boolean> arg0, Boolean arg1, Boolean arg2) {
+				// TODO Auto-generated method stub
+					button.setDisable(false);
+					
+					newRound.setValue(false);	
+			}
+		});
 	}
 	
 	/* All getters and setters */
