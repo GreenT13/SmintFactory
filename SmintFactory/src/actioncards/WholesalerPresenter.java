@@ -15,6 +15,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import model.Model;
 
@@ -28,11 +29,13 @@ public class WholesalerPresenter implements Initializable {
 	
 	@FXML Button wholesaleButton1;
 	@FXML VBox leftActionBox, rightActionBox;
+	@FXML TextField wholesaleText;
 	
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		wholesaleButton1.setDisable(true);
+		wholesaleButton1.setVisible(false);
 		
 		model.getNewRound().addListener(new ChangeListener<Boolean>(){
 			@Override
@@ -72,8 +75,12 @@ public class WholesalerPresenter implements Initializable {
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 				if(model.wholesalerBought.getValue()){
 					wholesaleButton1.setDisable(false);
+					wholesaleButton1.setVisible(true);
+					wholesaleText.setText("Wganjdfanjs dla.");
 				} else{
 					wholesaleButton1.setDisable(true);
+					wholesaleButton1.setVisible(false);
+					wholesaleText.setText("Wholesaler is not available yet.");
 				}
 			}
 			

@@ -14,8 +14,8 @@ import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import model.Model;
@@ -31,11 +31,13 @@ public class LottoPresenter implements Initializable {
 	@FXML Button lottoButton1;
 	@FXML VBox leftActionBox, rightActionBox;
 	@FXML HBox buildingsBox1, buildingsBox2;
+	@FXML TextField lottoText;
 
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		lottoButton1.setDisable(true);
+		lottoButton1.setVisible(false);
 		
 		model.getNewRound().addListener(new ChangeListener<Boolean>(){
 			@Override
@@ -77,8 +79,12 @@ public class LottoPresenter implements Initializable {
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 				if(model.lottoBought.getValue()){
 					lottoButton1.setDisable(false);
+					lottoButton1.setVisible(true);
+					lottoText.setText("changetext");
 				} else{
 					lottoButton1.setDisable(true);
+					lottoButton1.setVisible(false);
+					lottoText.setText("Lotto is not available");
 				}
 			}
 			
