@@ -1,8 +1,10 @@
 package card.model;
 
-import javafx.scene.Parent;
+import javafx.beans.property.SimpleIntegerProperty;
 
 public class Card {
+	
+	
 	
 	String name;
 	Integer extraMoney;
@@ -23,8 +25,9 @@ public class Card {
 		this.type = type;
 		this.cardId = cardId;
 	}
-	
-	// Methods that can be overridden to create special cards.
+
+
+	//Methods that can be overridden to create special cards.
 	public Integer calculateStars() {
 		return stars;
 	}

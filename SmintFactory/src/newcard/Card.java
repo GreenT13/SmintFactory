@@ -5,6 +5,7 @@ public class Card {
 	public final static String RED = "red";
 	public final static String YELLOW = "yellow";
 	public final static String GREEN = "green";
+	public final static String AQUAMARINE = "aquamarine";
 
 	String name;
 	Integer extraMoney;

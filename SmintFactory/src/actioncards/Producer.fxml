@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:controller="actioncards.ProducerPresenter" maxHeight="-Infinity" maxWidth="-Infinity" style="-fx-background-color:white;" minHeight="-Infinity" minWidth="-Infinity" prefHeight="123.0" prefWidth="274.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" >
+<Pane fx:controller="actioncards.ProducerPresenter" maxHeight="-Infinity" maxWidth="-Infinity" styleClass="border" minHeight="-Infinity" minWidth="-Infinity" prefHeight="123.0" prefWidth="274.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" >
    <children>
       <Button id="produceButton1" fx:id="produceButton1" onAction="#actionProduce" layoutX="14.0" layoutY="23.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="34.0" text="1" />
       <Button id="produceButton2" fx:id="produceButton2" onAction="#actionProduce" layoutX="14.0" layoutY="70.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="34.0" text="1" />

@@ -16,7 +16,7 @@ public class Player {
 	public boolean hasPassed;
 	
 	public Player(){
-		money = new SimpleIntegerProperty(3);
+		money = new SimpleIntegerProperty(10);
 		income = new SimpleIntegerProperty(1);
 		points = new SimpleIntegerProperty(0);
 		hand = FXCollections.observableArrayList();

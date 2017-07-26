@@ -1,5 +1,7 @@
 package card.model;
 
+import javafx.beans.value.ChangeListener;
+
 public enum CardId {
 	// Card names
 	CORPORATE_HQ,
@@ -22,5 +24,6 @@ public enum CardId {
 	GARDENS,
 	WHOLESALER,
 	CRANE,
-	LANDFILL
+	LANDFILL;
+
 }

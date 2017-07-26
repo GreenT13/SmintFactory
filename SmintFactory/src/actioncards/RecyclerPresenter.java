@@ -50,7 +50,7 @@ public class RecyclerPresenter implements Initializable {
 			}
 			
 		});
-		//}
+
 	}
 	
 	@FXML

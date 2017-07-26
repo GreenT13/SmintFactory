@@ -48,18 +48,18 @@ public class CardPresenter implements Initializable {
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		//	
-		model.supplyButtonPressed.addListener(new ChangeListener<Boolean>(){
-			@Override
-			public void changed(ObservableValue<? extends Boolean> arg0, Boolean arg1, Boolean arg2) {
-				// TODO Auto-generated method stub
-				if(model.supplyButtonPressed.getValue()==true){
-					cardPane.getStyleClass().add("pick");
-				} else{
-					cardPane.getStyleClass().remove("pick");
-				}
-			}
-			
-		});
+//		model.supplyButtonPressed.addListener(new ChangeListener<Boolean>(){
+//			@Override
+//			public void changed(ObservableValue<? extends Boolean> arg0, Boolean arg1, Boolean arg2) {
+//				// TODO Auto-generated method stub
+//				if(model.supplyButtonPressed.getValue()==true){
+//					cardPane.getStyleClass().add("pick");
+//				} else{
+//					cardPane.getStyleClass().remove("pick");
+//				}
+//			}
+//			
+//		});
 	}
 	
 	
@@ -90,7 +90,20 @@ public class CardPresenter implements Initializable {
 	}
 
 	public void actionTake(MouseEvent event){
-		if(model.recycleButtonPressed.getValue()){
+		if(model.swapButtonPressed.getValue()){
+			if(((Pane)event.getSource()).getParent().getId().contains("plansBox")){
+				// selecteert kaart om te swappen (swapOld)
+				model.setSwapRemoveFromPlans(true);
+				model.selectSwapCardHand(card.getCardId(), ((Pane)event.getSource()));
+			} else if(((Pane)event.getSource()).getParent().getId().contains("buildingsBox")){
+				// selecteert kaart om te swappen (swapOld)
+				model.setSwapRemoveFromPlans(false);
+				model.selectSwapCardHand(card.getCardId(), ((Pane)event.getSource()));
+			} else if (((Pane)event.getSource()).getParent().getId().contains("cardBox")){
+				// selecteert kaart uit cardbox (swapNew)
+				model.selectSwapCardBoard(card.getCardId(), ((Pane)event.getSource()));
+			}				
+		} else if(model.recycleButtonPressed.getValue()){
 			model.recycleCard(card.getCardId());
 		} else if (model.supplyButtonPressed.getValue()){
 			if (model.moneyCheck(model.getCurrentPlayer().getMoney().getValue(), CardMapper.createCard(card.getCardId()).getCost())){
@@ -115,6 +128,9 @@ public class CardPresenter implements Initializable {
 		addBorder(model.buildButtonPressed.getValue(), ((Pane)event.getSource()), "plansBox");
 		addBorder(model.recycleButtonPressed.getValue(), ((Pane)event.getSource()), "plansBox");
 		addBorder(model.recycleButtonPressed.getValue(), ((Pane)event.getSource()), "buildingsBox");
+		addBorder(model.swapButtonPressed.getValue(), ((Pane)event.getSource()), "cardBox");
+		addBorder(model.swapButtonPressed.getValue(), ((Pane)event.getSource()), "plansBox");
+		addBorder(model.swapButtonPressed.getValue(), ((Pane)event.getSource()), "buildingsBox");
 	}
 	
 	public void toBackCard(MouseEvent event){

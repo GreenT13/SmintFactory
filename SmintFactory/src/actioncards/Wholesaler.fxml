@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:controller="actioncards.WholesalerPresenter" maxHeight="-Infinity" maxWidth="-Infinity" style="-fx-background-color:white;" minHeight="-Infinity" minWidth="-Infinity" prefHeight="123.0" prefWidth="274.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" >
+<Pane fx:controller="actioncards.WholesalerPresenter" maxHeight="-Infinity" maxWidth="-Infinity" styleClass="border" minHeight="-Infinity" minWidth="-Infinity" prefHeight="123.0" prefWidth="274.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" >
    <children>
       <Button id="wholesaleButton1" fx:id="wholesaleButton1" onAction="#actionWholesale" layoutX="14.0" layoutY="46.5" mnemonicParsing="false" prefHeight="29.0" prefWidth="34.0" text="1" />
       <TextField id="wholesaleText" fx:id="wholesaleText" alignment="CENTER" editable="false" layoutX="63.0" layoutY="46.0" prefHeight="55.0" prefWidth="195.0" text="Wholesaler is not available yet." />

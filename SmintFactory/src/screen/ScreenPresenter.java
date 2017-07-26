@@ -119,7 +119,9 @@ public class ScreenPresenter implements Initializable {
 		rightActionBox.getChildren().add(builder.getView());
 		
 		//Layout special cards
-		addSpecialCards(leftActionBox, rightActionBox);
+		rightActionBox.getChildren().add(swap.getView());
+		
+		//addSpecialCards(leftActionBox, rightActionBox);
 		
 		playerBox1.getChildren().add(player1.getView());
 		playerBox2.getChildren().add(player2.getView());
@@ -142,6 +144,7 @@ public class ScreenPresenter implements Initializable {
 				model.addGameConsoleText("The winner is "+ model.determineWinner().getPlayername() + " with " + model.determineWinner().getPoints().getValue() + " points");
 			}
 		});
+
 
 		plansChangeListener(true);
 		plansChangeListener(false);
@@ -301,8 +304,7 @@ public class ScreenPresenter implements Initializable {
 				card.getParent().getStyleClass().remove("border");
 			}
 		}
-	}
-	
+	}	
 	
 	void addCard(CardId cardId) {
 		FXMLView cardview = new CardView();

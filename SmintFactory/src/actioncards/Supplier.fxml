@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane id="actionSupplier" fx:id="actionSupplier" fx:controller="actioncards.SupplierPresenter" style="-fx-background-color:white;" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="123.0" prefWidth="274.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" >
+<Pane id="actionSupplier" fx:id="actionSupplier" fx:controller="actioncards.SupplierPresenter" styleClass="border" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="123.0" prefWidth="274.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" >
    <children>
       <Button id="supplyButton1" fx:id="supplyButton1" layoutX="14.0" layoutY="23.0" mnemonicParsing="false" onAction="#actionSupply" prefHeight="29.0" prefWidth="34.0" />
       <Button id="supplyButton2" fx:id="supplyButton2" layoutX="14.0" layoutY="70.0" mnemonicParsing="false" onAction="#actionSupply" prefHeight="29.0" prefWidth="34.0" />

@@ -3,11 +3,19 @@ package card.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import javafx.beans.property.SimpleIntegerProperty;
+import model.Model;
+
 /**
  * Class that will create card objects element from Deck only.
  * Heavily relies on the fact that every card is unique, having only one instance of each cardId.
  */
 public class CardMapper {
+	
+	@Inject
+	Model model;
 	
 	public static List<Card> cardProperties;
 	
@@ -18,10 +26,12 @@ public class CardMapper {
 //	this.type = type;
 //	this.cardId = cardId;
 //	
+
+	
 	static {
 		cardProperties = new ArrayList<Card>();
 		// Define all cards with properties here.
-		cardProperties.add(new Card("Corporate HQ", 1, 0, 3, "red", CardId.CORPORATE_HQ));
+		cardProperties.add(new Card("Corporate HQ", 0, 0, 3, "red", CardId.CORPORATE_HQ));
 		cardProperties.add(new Card("Wholesaler", 0, 1, 1, "aquamarine", CardId.WHOLESALER));
 		cardProperties.add(new Card("Lotto", 0, 2, 4, "aquamarine", CardId.LOTTO));
 		cardProperties.add(new Card("Mine", 1, 1, 2, "red", CardId.MINE));
@@ -43,7 +53,6 @@ public class CardMapper {
 		cardProperties.add(new Card("Truck", 0, 1, 2, "yellow", CardId.TRUCK));
 		cardProperties.add(new Card("Crane", 0, 1, 2, "yellow", CardId.CRANE));
 		cardProperties.add(new Card("Landfill", 0, 3, 3, "yellow", CardId.LANDFILL));		
-		
 	}
 
 	/**
@@ -60,4 +69,7 @@ public class CardMapper {
 		}
 		return null;
 	}
+
+
+	
 }

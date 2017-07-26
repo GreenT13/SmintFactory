@@ -15,3 +15,9 @@
 	-fx-border-style: solid;
     -fx-border-width: 5px;
 }
+
+.swapPick {
+	-fx-border-color: purple;
+	-fx-border-style: solid;
+    -fx-border-width: 5px;
+}

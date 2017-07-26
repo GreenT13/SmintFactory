@@ -11,6 +11,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 
@@ -30,11 +32,15 @@ public class Model {
 	public SimpleBooleanProperty supplyButtonPressed;
 	public SimpleBooleanProperty buildButtonPressed;
 	public SimpleBooleanProperty recycleButtonPressed;
+	public SimpleBooleanProperty swapButtonPressed;
 	public SimpleBooleanProperty sevenPointsReached;
 	public SimpleStringProperty gameConsoleText;
 	public SimpleBooleanProperty lottoBought;
 	public SimpleBooleanProperty wholesalerBought;
-	
+	public CardId swapRemove, swapAdd;
+	public Pane swapRemovePane, swapAddPane;
+	public boolean swapRemoveFromPlans;
+
 	boolean hasPreviousPlayerPassed;
 	Player player1, player2;
 	Player nobody;
@@ -54,9 +60,12 @@ public class Model {
 		supplyButtonPressed = new SimpleBooleanProperty(false);
 		buildButtonPressed = new SimpleBooleanProperty(false);
 		recycleButtonPressed = new SimpleBooleanProperty(false);
+		swapButtonPressed = new SimpleBooleanProperty(false);
 		sevenPointsReached = new SimpleBooleanProperty(false);
 		lottoBought = new SimpleBooleanProperty(false);
 		wholesalerBought = new SimpleBooleanProperty(false);
+		swapRemove = null;
+		swapAdd = null;	
 		
 		nobody = new Player();
 		nobody.setPlayername("Nobody");
@@ -311,6 +320,10 @@ public class Model {
 		recycleButtonPressed.set(buttonUsed);
 	}
 	
+	public void swap(boolean buttonUsed){
+		swapButtonPressed.set(buttonUsed);
+	}
+	
 	public boolean checkButton(Button button){
 		if(leftActionBox.getChildren().contains(button)){
 			return true;
@@ -331,6 +344,61 @@ public class Model {
 					newRound.setValue(false);	
 			}
 		});
+	}
+	
+	
+	public void selectSwapCardHand(CardId swapRemove, Pane pane) {
+		setSwapRemovePane(pane);
+		setSwapRemove(swapRemove);
+		if(getSwapRemoveFromPlans()){
+			if(getCurrentPlayer().getHand().contains(CardMapper.createCard(swapRemove))){
+				addGameConsoleText("You will lose " + CardMapper.createCard(swapRemove).getName() + " from your plans.");
+			} else {
+				addGameConsoleText("This is not your card");
+			}
+		} else{
+			if(getCurrentPlayer().getBuildings().contains(CardMapper.createCard(swapRemove))){
+				addGameConsoleText("You will lose " + CardMapper.createCard(swapRemove).getName() + " from your buildings.");
+			} else {
+				addGameConsoleText("This is not your card");
+			}
+		}
+		checkSwap(getSwapRemove(), getSwapAdd(), getSwapRemoveFromPlans());
+		
+	}
+
+	public void selectSwapCardBoard(CardId swapAdd, Pane pane) {
+			setSwapAdd(swapAdd);
+			setSwapAddPane(pane);
+			addGameConsoleText("You will receive " + CardMapper.createCard(swapAdd).getName() + " from the plan pile");
+			checkSwap(getSwapRemove(), getSwapAdd(), getSwapRemoveFromPlans());
+	}
+	
+	public void checkSwap(CardId swapRemove, CardId swapAdd, boolean fromPlans){
+		if(swapRemove != null & swapAdd != null){
+			if(fromPlans){
+				getBoard().remove(CardMapper.createCard(swapAdd));
+				getBoard().add(CardMapper.createCard(swapRemove));
+				getCurrentPlayer().getHand().remove(CardMapper.createCard(swapRemove));
+				getCurrentPlayer().getHand().add(CardMapper.createCard(swapAdd));
+			} else {
+				getBoard().remove(CardMapper.createCard(swapAdd));
+				getBoard().add(CardMapper.createCard(swapRemove));
+				getCurrentPlayer().getBuildings().remove(CardMapper.createCard(swapRemove));
+				getCurrentPlayer().getBuildings().add(CardMapper.createCard(swapAdd));
+			}
+
+			resetSwap();
+			changeTurn();
+			swapButtonPressed.set(false);
+		}
+	}	
+	
+	void resetSwap(){
+		setSwapAddPane(null);
+		setSwapRemovePane(null);
+		setSwapAdd(null);
+		setSwapRemove(null);
 	}
 	
 	/* All getters and setters */
@@ -383,7 +451,55 @@ public class Model {
 		this.buildButtonPressed = buildButtonPressed;
 	}
 
+	public SimpleBooleanProperty getSwapButtonPressed() {
+		return swapButtonPressed;
+	}
+
+	public void setSwapButtonPressed(SimpleBooleanProperty swapButtonPressed) {
+		this.swapButtonPressed = swapButtonPressed;
+	}
+
+	public CardId getSwapRemove() {
+		return swapRemove;
+	}
+	
+	public void setSwapRemove(CardId swapRemove){
+		this.swapRemove = swapRemove;
+	}
+	
+	public CardId getSwapAdd(){
+		return swapAdd;
+	}
+	
+	public void setSwapAdd(CardId swapAdd){
+		this.swapAdd = swapAdd;
+	}
+	
+	public boolean getSwapRemoveFromPlans(){
+		return swapRemoveFromPlans;	
+	}
+	
+	public void setSwapRemoveFromPlans(boolean swapRemovePlans){
+		this.swapRemoveFromPlans = swapRemovePlans;
+	}
 	
 
+	public Pane getSwapRemovePane() {
+		return swapRemovePane;
+	}
+
+	public void setSwapRemovePane(Pane swapRemovePane) {
+		this.swapRemovePane = swapRemovePane;
+	}
+
+	public Pane getSwapAddPane() {
+		return swapAddPane;
+	}
+
+	public void setSwapAddPane(Pane swapAddPane) {
+		this.swapAddPane = swapAddPane;
+	}
+	
+	
 	
 }
