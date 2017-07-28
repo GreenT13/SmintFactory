@@ -144,6 +144,7 @@ public class Model implements IModel {
 			if(!inPlans && !isBuilt){
 				buyCard(cardId);
 			} else{
+				addGameConsoleText("That card is not in your hand");
 				return;
 			}
 			break;
@@ -151,6 +152,7 @@ public class Model implements IModel {
 			if(inPlans){
 				buildCard(cardId);
 			} else{
+				addGameConsoleText("Cannot build that card");
 				return;
 			}
 			break;
@@ -267,20 +269,18 @@ public class Model implements IModel {
 	
 	void buildCard(Integer cardId){
 		if(searchCardFromList(getCurrentPlayer().getHand(), cardId) == null){
+			addGameConsoleText("That card is not in your plans");
 			return;
 		}
-		getCurrentPlayer().getMoney().setValue(getCurrentPlayer().getMoney().getValue() - currentPlayerBuildCost.getValue());
-		getCurrentPlayer().getBuildings().add(drawCardFromList(getCurrentPlayer().getHand(), cardId));
-//		if(cardId == CardManager.retrieveCard("Crane").getCardId()){
-//			getCurrentPlayer().getBuildCost().set(1);
-//		}
-		if(currentState.isButton1Used()){
-			isBuilderButton1Used.setValue(true);
-		} else {
-			isBuilderButton2Used.setValue(true);
-		}
-		currentState = null;
-		changeTurn();
+			getCurrentPlayer().getMoney().setValue(getCurrentPlayer().getMoney().getValue() - currentPlayerBuildCost.getValue());
+			getCurrentPlayer().getBuildings().add(drawCardFromList(getCurrentPlayer().getHand(), cardId));
+			if(currentState.isButton1Used()){
+				isBuilderButton1Used.setValue(true);
+			} else {
+				isBuilderButton2Used.setValue(true);
+			}
+			currentState = null;
+			changeTurn();	
 	}
 	
 	Card drawCardFromList(List<Card> list, Integer cardId){
