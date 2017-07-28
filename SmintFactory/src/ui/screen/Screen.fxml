@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<GridPane fx:id="gridPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900" prefWidth="1500" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.screen.ScreenPresenter">
+   <columnConstraints>
+      <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="450" />
+      <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="600" />
+      <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="450" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+   </rowConstraints>
+   <children>
+      <VBox GridPane.columnIndex="1">
+         <children>
+            <HBox fx:id="cardBox" alignment="CENTER" prefHeight="230.0" prefWidth="500" spacing="20" style="-fx-background-color:white;" />
+            <HBox prefHeight="574.0" prefWidth="500">
+               <children>
+                  <VBox fx:id="leftActionBox" prefHeight="574.0" prefWidth="300.0" style="-fx-background-color:white;" />
+                  <VBox fx:id="rightActionBox" prefHeight="574.0" prefWidth="300.0" style="-fx-background-color:white;" />
+               </children>
+            </HBox>
+            <TextArea id="gameConsole" fx:id="gameConsole" prefHeight="127.0" prefWidth="600.0" />
+         </children>
+      </VBox>
+      <VBox>
+         <children>
+            <HBox fx:id="playerBox1" prefHeight="233.0" prefWidth="400.0" />
+            <HBox fx:id="buildingsBox1" prefHeight="264.0" prefWidth="450.0" VBox.vgrow="NEVER" />
+            <HBox fx:id="plansBox1" prefHeight="289.0" prefWidth="450.0" />
+         </children>
+      </VBox>
+      <VBox GridPane.columnIndex="2">
+         <children>
+            <HBox fx:id="playerBox2" nodeOrientation="RIGHT_TO_LEFT" prefHeight="233.0" prefWidth="400.0" />
+            <HBox fx:id="buildingsBox2" prefHeight="283.0" prefWidth="400.0" VBox.vgrow="NEVER" />
+            <HBox fx:id="plansBox2" prefHeight="279.0" prefWidth="400.0" VBox.vgrow="NEVER"/>
+         </children>
+      </VBox>
+   </children>
+</GridPane>

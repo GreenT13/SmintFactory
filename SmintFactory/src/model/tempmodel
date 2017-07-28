@@ -1,0 +1,425 @@
+
+	public void clickCard(boolean inPlans, boolean isBuilt){
+		//
+	}
+	
+	public boolean moneyCheck(int playerMoney, int objectMoney){
+		if (playerMoney >= objectMoney){
+			return true;
+		} else{
+			return false;
+		}
+	}
+	
+	public void addGameConsoleText(String text){
+		gameConsoleText.setValue(text + System.lineSeparator() + gameConsoleText.getValue());
+	}
+	
+	public void recycleCard(CardId cardId){
+		if(getCurrentPlayer().getHand().contains(CardMapper.createCard(cardId))){
+			getCurrentPlayer().getHand().remove(CardMapper.createCard(cardId));
+			getCurrentPlayer().money.set(getCurrentPlayer().getMoney().getValue() + CardMapper.createCard(cardId).getStars() + CardMapper.createCard(cardId).getCost());
+			changeTurn();
+		} else if(getCurrentPlayer().getBuildings().contains(CardMapper.createCard(cardId))) {
+			getCurrentPlayer().getBuildings().remove(CardMapper.createCard(cardId));
+			getCurrentPlayer().money.set(getCurrentPlayer().getMoney().getValue() + CardMapper.createCard(cardId).getStars() + CardMapper.createCard(cardId).getCost());
+			changeTurn();
+		} else {
+			addGameConsoleText("Pick a plan from your hand");
+		}
+	}
+	
+	public void buildCard(CardId cardId){
+		if(getCurrentPlayer().getHand().contains(CardMapper.createCard(cardId))){
+			getCurrentPlayer().getHand().remove(CardMapper.createCard(cardId));
+			getCurrentPlayer().buildings.add(CardMapper.createCard(cardId));
+			getCurrentPlayer().money.setValue((getCurrentPlayer().money.getValue() - 2));
+			buildButtonPressed.setValue(false);
+			changeTurn();
+		} else {
+			addGameConsoleText("That card is not in your hand");
+		}
+	}
+	
+	public void buyCard(CardId cardId){
+		if(getCurrentPlayer().getBuildings().contains(CardMapper.createCard(CardId.ASSEMBLER))){
+			board.remove(CardMapper.createCard(cardId));
+			getCurrentPlayer().buildings.add(CardMapper.createCard(cardId));
+			getCurrentPlayer().money.setValue((getCurrentPlayer().money.getValue() - CardMapper.createCard(cardId).getCost()));
+			supplyButtonPressed.setValue(false);
+			changeTurn();
+		}
+		if(board.contains(CardMapper.createCard(cardId))){
+			board.remove(CardMapper.createCard(cardId));
+			getCurrentPlayer().hand.add(CardMapper.createCard(cardId));
+			getCurrentPlayer().money.setValue((getCurrentPlayer().money.getValue() - CardMapper.createCard(cardId).getCost()));
+			supplyButtonPressed.setValue(false);
+			changeTurn();
+		} else {
+			addGameConsoleText("That card is not on the board");
+		}
+	}
+		
+	boolean checkActionCards(Button button){
+		if(getPlayer(true).getBuildings().contains(button)){
+			 return true;
+		 } else if(getPlayer(false).getBuildings().contains(button)){
+			 return true;
+		 } else {
+			 return false;
+		 }
+	}
+	
+	void checkLottoBought(){
+		if(getPlayer(true).getBuildings().contains(CardMapper.createCard(CardId.LOTTO))){
+			lottoBought.set(true);
+		}
+		if(getPlayer(false).getBuildings().contains(CardMapper.createCard(CardId.LOTTO))){
+			lottoBought.set(true);
+		}
+	}
+	
+	void checkWholesalerBought(){
+		if(getPlayer(true).getBuildings().contains(CardMapper.createCard(CardId.WHOLESALER))){
+			wholesalerBought.set(true);
+		}
+		if(getPlayer(false).getBuildings().contains(CardMapper.createCard(CardId.WHOLESALER))){
+			wholesalerBought.set(true);
+		}
+	}
+	
+
+	
+	
+	
+	void updatePlayerProperties(boolean isPlayer1){
+		int totalIncome=1, totalPoints=0;
+		for(Card card:getPlayer(isPlayer1).getBuildings()){
+			totalIncome = totalIncome + card.determineExtraMoney(getPlayer(isPlayer1).getHand(), getPlayer(isPlayer1).getBuildings());
+			totalPoints = totalPoints + card.determineStars(getPlayer(isPlayer1).getHand(), getPlayer(isPlayer1).getBuildings());
+		}
+		if(getPlayer(isPlayer1).getBuildings().contains(CardMapper.createCard(CardId.CRANE))){
+			getPlayer(isPlayer1).getBuildCost().set(1);
+		} else {
+			getPlayer(isPlayer1).getBuildCost().set(2);
+		}
+		getPlayer(isPlayer1).getIncome().set(totalIncome);
+		getPlayer(isPlayer1).getPoints().set(totalPoints);
+		getPlayer(isPlayer1).getMoney().setValue(getPlayer(isPlayer1).getMoney().getValue()+getPlayer(isPlayer1).getIncome().getValue());
+	}
+	
+	public Player getPlayer(boolean isFirstPlayer){
+		if(isFirstPlayer){
+			return player1;
+		} else{
+			return player2;
+		}
+	}
+	
+	public Player getCurrentPlayer(){
+		return getPlayer(isPlayer1CurrentPlayer.getValue());
+	}
+	
+	public Player getOtherPlayer(){
+		return getPlayer(!isPlayer1CurrentPlayer.getValue());
+	}
+	
+	public void changeTurn(){
+		if(!player1.hasPassed & !player2.hasPassed){
+			isPlayer1CurrentPlayer.setValue(!isPlayer1CurrentPlayer.getValue());
+		}
+	}
+	
+	public void pass(){	
+		
+		
+		if(!player1.hasPassed & !player2.hasPassed){
+			getCurrentPlayer().hasPassed = true;
+			addGameConsoleText(getCurrentPlayer().getPlayername() + " has passed.");
+			isPlayer1CurrentPlayer.setValue(!isPlayer1CurrentPlayer.getValue());
+		} else {
+			getCurrentPlayer().hasPassed = true;
+			System.out.println(getCurrentPlayer().getPlayername() + " has passed.");
+		}
+		
+
+		if(player1.hasPassed & player2.hasPassed){
+			endRound();
+		}
+	}
+	
+	void endRound(){
+		getSevenPointsReached();
+		if(sevenPointsReached.getValue()==true){
+			determineWinner();
+		} else{
+			addGameConsoleText("Both players have passed. New round!");
+			newRound(true);
+			newRound(false);
+			fillBoard();
+			newRound.setValue(true);
+		}
+	}
+	
+	void newRound(boolean isPlayer1){
+		isPlayer1CurrentPlayer.set(isPlayer1);
+		updatePlayerProperties(isPlayer1);
+		// income
+		// points
+		getCurrentPlayer().hasPassed = false;
+		isPlayer1CurrentPlayer.setValue(isPlayer1StartPlayer.getValue());
+	}
+	
+
+	void createAndShuffleDeck(){
+		for(Card card:CardMapper.cardProperties){
+			deck.add(card);
+		}
+		
+		// Randomize deck here.
+	}
+	
+	public void fillBoard(){
+		int size = board.size();
+		for(int i = 0; i + size < 3; i++){
+			board.add(deck.get(0));
+			deck.remove(0);
+		}
+	}
+	
+	public void getSevenPointsReached(){
+		if(player1.getPoints().getValue()>=7 | player2.getPoints().getValue()>=7){
+			sevenPointsReached.setValue(true);
+		} else {
+			sevenPointsReached.setValue(false);
+		}
+	}
+	
+	public Player determineWinner(){
+		if (sevenPointsReached.getValue() == true){
+			if(player1.getPoints().getValue()>player2.getPoints().getValue()){
+				System.out.println("Player 1 wins the game!");
+				return player1;
+			} else if (player2.getPoints().getValue()>player1.getPoints().getValue()){
+				System.out.println("Player 2 wins the game!");
+				return player2;
+			} else {
+				if(player1.getMoney().getValue()>player2.getMoney().getValue()){
+					System.out.println("Player 1 wins the game!");
+					return player1;
+				} else if (player2.getMoney().getValue()>player1.getMoney().getValue()){
+					System.out.println("Player 2 wins the game!");
+					return player2;
+				} else{
+					System.out.println("It's a tie!");
+					return nobody;
+				}
+			}
+		} else{
+			return nobody;
+		}
+		
+	}
+	
+	/* Functions from cards in the middle. */
+	
+	public void producer(){
+		getCurrentPlayer().money.setValue(getCurrentPlayer().money.getValue()+1);
+		changeTurn();
+	}
+	
+	public void starter(){
+		isPlayer1StartPlayer.set(isPlayer1CurrentPlayer.getValue());
+		addGameConsoleText(getPlayer(isPlayer1CurrentPlayer.getValue()).getPlayername() + " is now the Starting Player.");
+		changeTurn();
+	}
+	
+	public void builder(boolean buttonUsed){
+		buildButtonPressed.set(buttonUsed);
+	}
+	
+	public void supplier(boolean buttonUsed){
+		supplyButtonPressed.set(buttonUsed);
+	}
+	
+	public void crowdfund(){
+		getCurrentPlayer().money.setValue(getCurrentPlayer().money.getValue()+2);
+		getOtherPlayer().money.setValue(getOtherPlayer().money.getValue()+1);
+		changeTurn();
+	}
+	
+	public void recycler(boolean buttonUsed){
+		recycleButtonPressed.set(buttonUsed);
+	}
+	
+	public void swap(boolean buttonUsed){
+		swapButtonPressed.set(buttonUsed);
+	}
+	
+	public void newRoundListener(Button button){
+		getNewRound().addListener(new ChangeListener<Boolean>(){
+			@Override
+			public void changed(ObservableValue<? extends Boolean> arg0, Boolean arg1, Boolean arg2) {
+				// TODO Auto-generated method stub
+					button.setDisable(false);
+					
+					newRound.setValue(false);	
+			}
+		});
+	}
+	
+	
+	public void selectSwapCardHand(CardId swapRemove, Pane pane) {
+		setSwapRemovePane(pane);
+		setSwapRemove(swapRemove);
+		if(getSwapRemoveFromPlans()){
+			if(getCurrentPlayer().getHand().contains(CardMapper.createCard(swapRemove))){
+				addGameConsoleText("You will lose " + CardMapper.createCard(swapRemove).getName() + " from your plans.");
+			} else {
+				addGameConsoleText("This is not your card");
+			}
+		} else{
+			if(getCurrentPlayer().getBuildings().contains(CardMapper.createCard(swapRemove))){
+				addGameConsoleText("You will lose " + CardMapper.createCard(swapRemove).getName() + " from your buildings.");
+			} else {
+				addGameConsoleText("This is not your card");
+			}
+		}
+		checkSwap(getSwapRemove(), getSwapAdd(), getSwapRemoveFromPlans());
+		
+	}
+
+	public void selectSwapCardBoard(CardId swapAdd, Pane pane) {
+			setSwapAdd(swapAdd);
+			setSwapAddPane(pane);
+			addGameConsoleText("You will receive " + CardMapper.createCard(swapAdd).getName() + " from the plan pile");
+			checkSwap(getSwapRemove(), getSwapAdd(), getSwapRemoveFromPlans());
+	}
+	
+	public void checkSwap(CardId swapRemove, CardId swapAdd, boolean fromPlans){
+		if(swapRemove != null & swapAdd != null){
+			if(fromPlans){
+				getBoard().remove(CardMapper.createCard(swapAdd));
+				getBoard().add(CardMapper.createCard(swapRemove));
+				getCurrentPlayer().getHand().remove(CardMapper.createCard(swapRemove));
+				getCurrentPlayer().getHand().add(CardMapper.createCard(swapAdd));
+			} else {
+				getBoard().remove(CardMapper.createCard(swapAdd));
+				getBoard().add(CardMapper.createCard(swapRemove));
+				getCurrentPlayer().getBuildings().remove(CardMapper.createCard(swapRemove));
+				getCurrentPlayer().getBuildings().add(CardMapper.createCard(swapAdd));
+			}
+
+			resetSwap();
+			changeTurn();
+			swapButtonPressed.set(false);
+		}
+	}	
+	
+	void resetSwap(){
+		setSwapAddPane(null);
+		setSwapRemovePane(null);
+		setSwapAdd(null);
+		setSwapRemove(null);
+	}
+	
+	/* All getters and setters */
+	
+	public ObservableList<Card> getBoard() {
+		return board;
+	}
+
+	public void setBoard(ObservableList<Card> board) {
+		this.board = board;
+	}
+
+	public SimpleBooleanProperty getIsPlayer1CurrentPlayer() {
+		return isPlayer1CurrentPlayer;
+	}
+
+	public void setIsPlayer1CurrentPlayer(SimpleBooleanProperty isPlayer1CurrentPlayer) {
+		this.isPlayer1CurrentPlayer = isPlayer1CurrentPlayer;
+	}
+
+	public SimpleBooleanProperty getIsPlayer1StartPlayer() {
+		return isPlayer1StartPlayer;
+	}
+
+	public void setIsPlayer1StartPlayer(SimpleBooleanProperty isPlayer1StartPlayer) {
+		this.isPlayer1StartPlayer = isPlayer1StartPlayer;
+	}
+
+	public SimpleBooleanProperty getNewRound() {
+		return newRound;
+	}
+
+	public void setNewRound(SimpleBooleanProperty newRound) {
+		this.newRound = newRound;
+	}
+
+	public SimpleBooleanProperty getSupplyButtonPressed() {
+		return supplyButtonPressed;
+	}
+
+	public void setSupplyButtonPressed(SimpleBooleanProperty supplyButtonPressed) {
+		this.supplyButtonPressed = supplyButtonPressed;
+	}
+
+	public SimpleBooleanProperty getBuildButtonPressed() {
+		return buildButtonPressed;
+	}
+
+	public void setBuildButtonPressed(SimpleBooleanProperty buildButtonPressed) {
+		this.buildButtonPressed = buildButtonPressed;
+	}
+
+	public SimpleBooleanProperty getSwapButtonPressed() {
+		return swapButtonPressed;
+	}
+
+	public void setSwapButtonPressed(SimpleBooleanProperty swapButtonPressed) {
+		this.swapButtonPressed = swapButtonPressed;
+	}
+
+	public CardId getSwapRemove() {
+		return swapRemove;
+	}
+	
+	public void setSwapRemove(CardId swapRemove){
+		this.swapRemove = swapRemove;
+	}
+	
+	public CardId getSwapAdd(){
+		return swapAdd;
+	}
+	
+	public void setSwapAdd(CardId swapAdd){
+		this.swapAdd = swapAdd;
+	}
+	
+	public boolean getSwapRemoveFromPlans(){
+		return swapRemoveFromPlans;	
+	}
+	
+	public void setSwapRemoveFromPlans(boolean swapRemovePlans){
+		this.swapRemoveFromPlans = swapRemovePlans;
+	}
+	
+
+	public Pane getSwapRemovePane() {
+		return swapRemovePane;
+	}
+
+	public void setSwapRemovePane(Pane swapRemovePane) {
+		this.swapRemovePane = swapRemovePane;
+	}
+
+	public Pane getSwapAddPane() {
+		return swapAddPane;
+	}
+
+	public void setSwapAddPane(Pane swapAddPane) {
+		this.swapAddPane = swapAddPane;
+	}
+	
+	

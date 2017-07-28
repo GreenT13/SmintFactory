@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane id="cardPane" fx:id="cardPane" maxHeight="-Infinity" maxWidth="-Infinity" onMouseClicked="#actionTake" onMouseEntered="#addBorder" onMouseExited="#removeBorder" prefHeight="200.0" prefWidth="140.0" styleClass="pane" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.card.CardPresenter">
+   <children>
+      <Label fx:id="name" alignment="CENTER" contentDisplay="CENTER" layoutY="6.0" prefWidth="140.0" text="Name" />
+      <Label fx:id="cost" alignment="CENTER" contentDisplay="CENTER" layoutY="31.0" prefWidth="140.0" text="Cost" />
+      <Label fx:id="stars" alignment="CENTER" contentDisplay="CENTER" layoutY="168.0" prefWidth="140.0" text="Stars" />
+      <Label fx:id="extraMoney" alignment="CENTER" contentDisplay="CENTER" layoutY="151.0" prefWidth="140.0" text="Extra money" />
+   </children>
+</Pane>

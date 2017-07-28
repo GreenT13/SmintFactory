@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="123.0" prefWidth="274.0" styleClass="border" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.actioncards.builder.BuilderPresenter">
+   <children>
+      <Button id="buildButton1" fx:id="buildButton1" layoutX="14.0" layoutY="23.0" mnemonicParsing="false" onAction="#actionBuild" prefHeight="29.0" prefWidth="34.0" text="2" />
+      <Button id="buildButton2" fx:id="buildButton2" layoutX="14.0" layoutY="70.0" mnemonicParsing="false" onAction="#actionBuild" prefHeight="29.0" prefWidth="34.0" text="2" />
+      <TextField alignment="CENTER" editable="false" layoutX="63.0" layoutY="46.0" prefHeight="55.0" prefWidth="195.0" text="Build one plan from your hand." />
+      <TextField alignment="CENTER" editable="false" layoutX="63.0" layoutY="25.0" prefHeight="25.0" prefWidth="195.0" text="Builder">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </TextField>
+   </children>
+</Pane>

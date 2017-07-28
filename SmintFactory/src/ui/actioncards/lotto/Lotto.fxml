@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" styleClass="border" minWidth="-Infinity" prefHeight="123.0" prefWidth="274.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.actioncards.lotto.LottoPresenter">
+   <children>
+      <Button fx:id="lottoButton1" layoutX="14.0" layoutY="46.5" mnemonicParsing="false" onAction="#actionLotto" prefHeight="29.0" prefWidth="34.0" text="1"/>
+      <TextField fx:id="lottoText" alignment="CENTER" editable="false" layoutX="63.0" layoutY="46.0" prefHeight="55.0" prefWidth="195.0" text="Lotto is not available yet." />
+      <TextField alignment="CENTER" editable="false" layoutX="63.0" layoutY="25.0" prefHeight="25.0" prefWidth="195.0" text="Lotto">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </TextField>
+   </children>
+</Pane>

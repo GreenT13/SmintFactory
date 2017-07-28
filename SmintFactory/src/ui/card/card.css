@@ -1,0 +1,17 @@
+.pane {
+	-fx-border-color: black;
+	-fx-border-style: solid;
+	-fx-border-width: 1px;
+	}
+
+.pickBorder {
+	-fx-border-color: gold;
+	-fx-border-style: solid;
+    -fx-border-width: 5px;
+}
+
+.swapPick {
+	-fx-border-color: purple;
+	-fx-border-style: solid;
+    -fx-border-width: 5px;
+}
