@@ -13,7 +13,7 @@ public class App extends Application {
     	// Create a new window which loads 'screen.fxml' into it.
     	ScreenView appView = new ScreenView();
         Scene scene = new Scene(appView.getView());
-        stage.setTitle("Testing badass shit");
+        stage.setTitle("Testing different name commit");
         
         // Add global css. Not sure when we will actually use this.
         final String uri = getClass().getResource("app.css").toExternalForm();
